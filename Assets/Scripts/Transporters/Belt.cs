@@ -46,7 +46,7 @@ namespace OneRoomFactory.Transporters
                     MoveVector = new Vector3(0, 0, -1);
                     break;
                 case BuildRotation.Left:
-                    Output = Tile.TileManager.Tiles[Tile.PosX - 1, Tile.PosY];
+                    Output = Tile.TileManager.Tiles[Tile.PosX + 1, Tile.PosY];
                     MoveVector = new Vector3(1, 0, 0);
                     break;
             }
@@ -54,7 +54,7 @@ namespace OneRoomFactory.Transporters
 
         private void FixedUpdate()
         {
-            if (ToMove != null && ToMove.LastCollider == collider)
+            if (ToMove != null && ToMove.TransportedBy == this)
             {
                 ToMove.transform.position += MoveVector * Time.fixedDeltaTime;
             }
@@ -64,11 +64,13 @@ namespace OneRoomFactory.Transporters
         {
             if (collision.collider.CompareTag("Movable"))
             {
-                ToMove = collision.gameObject.GetComponent<Movable>();
-                if (ToMove.LastCollider != collider)
+                Debug.Log("moved by new");
+                var movable = collision.gameObject.GetComponent<Movable>();
+                ToMove = movable;
+                if (ToMove.TransportedBy != this)
                 {
-                    ToMove.LastCollider = collider;
-                    //                    ToMove.transform.position = InputCenter.position;
+                    Debug.Log("moved by new");
+                    ToMove.TransportedBy = this;
                 }
             }
         }
@@ -77,6 +79,12 @@ namespace OneRoomFactory.Transporters
         {
             if (collision.collider.CompareTag("Movable"))
             {
+                Debug.Log("exit old");
+                var objectOnNextTile = Output.BuiltObject as Belt;
+                if (objectOnNextTile != null && objectOnNextTile.Rotation != Rotation)
+                {
+                    ToMove.transform.position = objectOnNextTile.InputCenter.position;
+                }
                 ToMove = null;
             }
         }
