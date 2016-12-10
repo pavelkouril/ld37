@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movable : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+namespace OneRoomFactory.Factory
+{
+    public class Movable : MonoBehaviour
+    {
+        public Collider LastCollider { get; set; }
+    }
 }

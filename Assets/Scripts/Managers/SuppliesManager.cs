@@ -47,6 +47,11 @@ namespace OneRoomFactory.Managers
             belt.Rotation = BuildRotation.Right;
             tile.Build(belt);
 
+            tile = tileManager.Tiles[6, 4];
+            belt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.Euler(0,-90,0)) as Belt;
+            belt.Rotation = BuildRotation.Up;
+            tile.Build(belt);
+
             tile = tileManager.Tiles[9, 5];
             electronicsBelt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.identity) as Belt;
             electronicsBelt.Rotation = BuildRotation.Right;
