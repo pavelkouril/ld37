@@ -33,5 +33,15 @@ namespace OneRoomFactory.Managers
                 }
             }
         }
+
+        public void ShowTiles()
+        {
+            TilesParent.gameObject.SetActive(true);
+        }
+
+        public void HideTiles()
+        {
+            TilesParent.gameObject.SetActive(false);
+        }
     }
 }

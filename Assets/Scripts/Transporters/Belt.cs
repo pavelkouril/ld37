@@ -34,8 +34,8 @@ namespace OneRoomFactory.Transporters
             switch (Rotation)
             {
                 case BuildRotation.Up:
-                    Output = Tile.TileManager.Tiles[Tile.PosX, Tile.PosY - 1];
-                    MoveVector = new Vector3(0, 0, -1);
+                    Output = Tile.TileManager.Tiles[Tile.PosX, Tile.PosY + 1];
+                    MoveVector = new Vector3(0, 0, 1);
                     break;
                 case BuildRotation.Right:
                     Output = Tile.TileManager.Tiles[Tile.PosX - 1, Tile.PosY];

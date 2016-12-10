@@ -9,7 +9,7 @@ namespace OneRoomFactory.Factory
 {
     public class Tile : MonoBehaviour
     {
-        public bool IsOccupied { get { return BuiltObject != null; } }
+        public bool IsFree { get { return BuiltObject == null; } }
 
         public IBuildable BuiltObject { get; private set; }
 

@@ -9,9 +9,9 @@ namespace OneRoomFactory.Factory
     /// </summary>
     public enum BuildRotation
     {
-           Up,
-           Down,
-           Left,
-           Right
+        Right,
+        Down,
+        Left,
+        Up,
     }
 }
