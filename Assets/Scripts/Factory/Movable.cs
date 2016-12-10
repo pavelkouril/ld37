@@ -8,5 +8,6 @@ namespace OneRoomFactory.Factory
     {
         public Collider LastCollider { get; set; }
         public MovableType Type;
+        public int Units = 1;
     }
 }

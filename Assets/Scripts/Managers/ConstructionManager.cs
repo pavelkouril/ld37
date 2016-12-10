@@ -18,7 +18,10 @@ namespace OneRoomFactory.Managers
 
         private GameObject modelToPlace;
         private GameObject prefabToPlace;
+
         private GameObject beltModel;
+        private GameObject uvStationModel;
+
         private BuildRotation currentBuildRotation = BuildRotation.Right;
         private Vector3 currentVectorRotation = Vector3.zero;
 
@@ -30,8 +33,12 @@ namespace OneRoomFactory.Managers
         private void Start()
         {
             var beltModelGo = BeltPrefab.GetComponentInChildren<MeshRenderer>().gameObject;
-            beltModel = Instantiate(beltModelGo);
+            beltModel = Instantiate(beltModelGo, beltModelGo.transform.position, Quaternion.identity);
             beltModel.SetActive(false);
+
+            var uvStationModelGo = UVStationPrefab.GetComponentInChildren<MeshRenderer>().gameObject;
+            uvStationModel = Instantiate(uvStationModelGo, uvStationModelGo.transform.position, Quaternion.identity);
+            uvStationModel.SetActive(false);
         }
 
         private void Update()
@@ -51,8 +58,8 @@ namespace OneRoomFactory.Managers
             {
                 currentBuildRotation = BuildRotation.Right;
                 currentVectorRotation = Vector3.zero;
-                modelToPlace = beltModel;
-                prefabToPlace = BeltPrefab;
+                modelToPlace = uvStationModel;
+                prefabToPlace = UVStationPrefab;
                 modelToPlace.transform.rotation = Quaternion.identity;
                 modelToPlace.SetActive(true);
                 tileManager.ShowTiles();
@@ -77,13 +84,13 @@ namespace OneRoomFactory.Managers
 
                 if (Physics.Raycast(ray, out hit, TileLayer))
                 {
-                    modelToPlace.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+                    modelToPlace.transform.position = new Vector3(hit.point.x, modelToPlace.transform.position.y, hit.point.z);
                     if (hit.collider.CompareTag("Tile"))
                     {
                         var tile = hit.collider.gameObject.GetComponent<Tile>();
                         if (tile.IsFree)
                         {
-                            modelToPlace.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 0, 0.5f);
+                            modelToPlace.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 0, 0.2f);
                             if (Input.GetMouseButton(0))
                             {
                                 Build(tile);
@@ -91,7 +98,7 @@ namespace OneRoomFactory.Managers
                         }
                         else
                         {
-                            modelToPlace.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0, 0.5f);
+                            modelToPlace.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0, 0.2f);
                         }
                     }
                 }
