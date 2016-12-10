@@ -12,6 +12,7 @@ namespace OneRoomFactory.Managers
         public LayerMask TileLayer;
 
         public GameObject BeltPrefab;
+        public GameObject UVStationPrefab;
 
         private TileManager tileManager;
 
@@ -36,6 +37,17 @@ namespace OneRoomFactory.Managers
         private void Update()
         {
             if (modelToPlace == null && Input.GetKeyDown(KeyCode.B))
+            {
+                currentBuildRotation = BuildRotation.Right;
+                currentVectorRotation = Vector3.zero;
+                modelToPlace = beltModel;
+                prefabToPlace = BeltPrefab;
+                modelToPlace.transform.rotation = Quaternion.identity;
+                modelToPlace.SetActive(true);
+                tileManager.ShowTiles();
+            }
+
+            if (modelToPlace == null && Input.GetKeyDown(KeyCode.V))
             {
                 currentBuildRotation = BuildRotation.Right;
                 currentVectorRotation = Vector3.zero;

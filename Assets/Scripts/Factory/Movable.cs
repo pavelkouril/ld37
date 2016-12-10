@@ -7,5 +7,6 @@ namespace OneRoomFactory.Factory
     public class Movable : MonoBehaviour
     {
         public Collider LastCollider { get; set; }
+        public MovableType Type;
     }
 }
