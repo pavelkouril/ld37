@@ -64,7 +64,7 @@ namespace OneRoomFactory.Managers
         {
             while (true)
             {
-                var supply = Instantiate(SupplyPrefab, acidBelt.transform.position + Vector3.up, Quaternion.identity) as Movable;
+                var supply = Instantiate(SupplyPrefab, acidBelt.InputCenter.position + Vector3.up, Quaternion.identity) as Movable;
                 yield return new WaitForSeconds(10);
             }
         }

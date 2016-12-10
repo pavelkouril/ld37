@@ -22,11 +22,15 @@ namespace OneRoomFactory.Transporters
 
         private Vector3 MoveVector = new Vector3(0, 0);
 
-        private Collider col;
+        private new Collider collider;
+
+        private void Awake()
+        {
+            collider = GetComponent<Collider>();
+        }
 
         private void Start()
         {
-            col = GetComponent<Collider>();
             switch (Rotation)
             {
                 case BuildRotation.Up:
@@ -50,9 +54,9 @@ namespace OneRoomFactory.Transporters
 
         private void FixedUpdate()
         {
-            if (ToMove != null)
+            if (ToMove != null && ToMove.LastCollider == collider)
             {
-                ToMove.transform.position += MoveVector * Time.fixedDeltaTime * 0.5f;
+                ToMove.transform.position += MoveVector * Time.fixedDeltaTime;
             }
         }
 
@@ -61,10 +65,10 @@ namespace OneRoomFactory.Transporters
             if (collision.collider.CompareTag("Movable"))
             {
                 ToMove = collision.gameObject.GetComponent<Movable>();
-                if (ToMove.LastCollider != col)
+                if (ToMove.LastCollider != collider)
                 {
-                    ToMove.LastCollider = col;
-                    ToMove.transform.position = InputCenter.position;
+                    ToMove.LastCollider = collider;
+                    //                    ToMove.transform.position = InputCenter.position;
                 }
             }
         }
