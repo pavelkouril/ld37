@@ -37,7 +37,7 @@ namespace OneRoomFactory.Managers
             acidBelt.Rotation = BuildRotation.Right;
             tile.Build(acidBelt);
 
-          /*  tile = tileManager.Tiles[8, 4];
+            tile = tileManager.Tiles[8, 4];
             var belt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.identity) as Belt;
             belt.Rotation = BuildRotation.Right;
             tile.Build(belt);
@@ -46,11 +46,6 @@ namespace OneRoomFactory.Managers
             belt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.identity) as Belt;
             belt.Rotation = BuildRotation.Right;
             tile.Build(belt);
-
-            tile = tileManager.Tiles[6, 4];
-            belt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.Euler(0, -90, 0)) as Belt;
-            belt.Rotation = BuildRotation.Up;
-            tile.Build(belt);*/
 
             tile = tileManager.Tiles[9, 5];
             electronicsBelt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.identity) as Belt;
@@ -65,7 +60,7 @@ namespace OneRoomFactory.Managers
             yield return new WaitForSeconds(5);
             while (true)
             {
-                var supply = Instantiate(SupplyPrefab, acidBelt.InputCenter.position + Vector3.up, Quaternion.identity) as Movable;
+                var supply = Instantiate(SupplyPrefab, acidBelt.InputCenter.position + Vector3.up + new Vector3(0, 0, -0.25f), Quaternion.identity) as Movable;
                 yield return new WaitForSeconds(10);
             }
         }

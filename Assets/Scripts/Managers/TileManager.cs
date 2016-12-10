@@ -32,6 +32,18 @@ namespace OneRoomFactory.Managers
                     Tiles[i, j].GetComponent<MeshRenderer>().material = (i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1) ? Mat1 : Mat2;
                 }
             }
+
+            for (var i = 0; i < Size; i++)
+            {
+                for (var j = 0; j < Size; j++)
+                {
+                    var currentTile = Tiles[i, j];
+                    currentTile.NeighbourLeft = i > 0 ? Tiles[currentTile.PosX - 1, currentTile.PosY] : null;
+                    currentTile.NeighbourRight = i < Size - 1 ? Tiles[currentTile.PosX + 1, currentTile.PosY] : null;
+                    currentTile.NeighbourDown = j > 0 ? Tiles[currentTile.PosX, currentTile.PosY - 1] : null;
+                    currentTile.NeighbourUp = j < Size - 1 ? Tiles[currentTile.PosX, currentTile.PosY + 1] : null;
+                }
+            }
         }
 
         public void ShowTiles()

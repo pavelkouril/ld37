@@ -34,19 +34,19 @@ namespace OneRoomFactory.Transporters
             switch (Rotation)
             {
                 case BuildRotation.Up:
-                    Output = Tile.TileManager.Tiles[Tile.PosX, Tile.PosY + 1];
-                    MoveVector = new Vector3(0, 0, 1);
+                    Output = Tile.NeighbourDown;
+                    MoveVector = new Vector3(0, 0, +1);
                     break;
                 case BuildRotation.Right:
-                    Output = Tile.TileManager.Tiles[Tile.PosX - 1, Tile.PosY];
+                    Output = Tile.NeighbourLeft;
                     MoveVector = new Vector3(-1, 0, 0);
                     break;
                 case BuildRotation.Down:
-                    Output = Tile.TileManager.Tiles[Tile.PosX, Tile.PosY - 1];
+                    Output = Tile.NeighbourUp;
                     MoveVector = new Vector3(0, 0, -1);
                     break;
                 case BuildRotation.Left:
-                    Output = Tile.TileManager.Tiles[Tile.PosX + 1, Tile.PosY];
+                    Output = Tile.NeighbourRight;
                     MoveVector = new Vector3(1, 0, 0);
                     break;
             }
@@ -60,38 +60,33 @@ namespace OneRoomFactory.Transporters
             }
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider other)
         {
-            if (collision.collider.CompareTag("Movable"))
+            if (other.CompareTag("Movable"))
             {
-                Debug.Log("moved by new");
-                var movable = collision.gameObject.GetComponent<Movable>();
+                var movable = other.GetComponent<Movable>();
                 ToMove = movable;
                 if (ToMove.TransportedBy != this)
                 {
-                    Debug.Log("moved by new");
                     ToMove.TransportedBy = this;
                 }
             }
         }
 
-        private void OnCollisionExit(Collision collision)
+        private void OnTriggerExit(Collider other)
         {
-            if (collision.collider.CompareTag("Movable"))
+            if (other.CompareTag("Movable"))
             {
-                Debug.Log("exit old");
-                var objectOnNextTile = Output.BuiltObject as Belt;
-                if (objectOnNextTile != null && objectOnNextTile.Rotation != Rotation)
+                if (Output)
                 {
-                    ToMove.transform.position = objectOnNextTile.InputCenter.position;
+                    var objectOnNextTile = Output.BuiltObject as Belt;
+                    if (objectOnNextTile != null && objectOnNextTile.Rotation != Rotation)
+                    {
+                        ToMove.transform.position = objectOnNextTile.InputCenter.position;
+                    }
                 }
                 ToMove = null;
             }
-        }
-
-        public void Transport()
-        {
-
         }
     }
 }

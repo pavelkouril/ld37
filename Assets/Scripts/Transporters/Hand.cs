@@ -40,6 +40,8 @@ namespace OneRoomFactory.Transporters
 
         public MovableType AcceptedType;
 
+        private Movable lastMoved { get; set; }
+
         void Start()
         {
             state = State.STATE_DEFAULT;
@@ -77,15 +79,9 @@ namespace OneRoomFactory.Transporters
 
         void FixedUpdate()
         {
-            if (target)
+            if (ToMove != null)
             {
-                float distance = Vector3.Distance(target.position, core.position);
-
-                Vector3 direction = target.position - core.position;
-                coreTargetAngle = (Mathf.Atan2(direction.z, direction.x) * -Mathf.Rad2Deg + 90.0f);
-
-                upperTargetAngle = 90.0f - Mathf.Asin((distance * 0.5f) / handLength) * Mathf.Rad2Deg * 2.0f;
-                lowerTargetAngle = 136.0f - Mathf.Acos((distance * 0.5f) / handLength) * Mathf.Rad2Deg;
+                CalculateAnglesForTransform(ToMove.transform);
             }
             else
             {
@@ -116,12 +112,12 @@ namespace OneRoomFactory.Transporters
                 switch (state)
                 {
                     case State.STATE_DEFAULT:
-                        if (target != null)
+                        if (ToMove != null)
                         {
-                            target.parent = upperHand.transform;
-                            target.gameObject.GetComponent<Rigidbody>().isKinematic = true;
-                            grabbedObject = target;
-                            target = null;
+                            ToMove.transform.parent = upperHand.transform;
+                            ToMove.GetComponent<Rigidbody>().isKinematic = true;
+                            grabbedObject = ToMove.transform;
+                            ToMove = null;
                             state = State.STATE_GRABBED;
                         }
                         break;
@@ -129,7 +125,8 @@ namespace OneRoomFactory.Transporters
                     case State.STATE_GRABBED:
                         if (grabbedObject != null)
                         {
-                            grabbedObject.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                            grabbedObject.GetComponent<Rigidbody>().isKinematic = false;
+                            grabbedObject.transform.parent = null;
                             grabbedObject = null;
                         }
                         state = State.STATE_DEFAULT;
@@ -138,11 +135,27 @@ namespace OneRoomFactory.Transporters
             }
         }
 
+        private void CalculateAnglesForTransform(Transform t)
+        {
+            float distance = Vector3.Distance(t.position, core.position);
+
+            Vector3 direction = t.position - core.position;
+            coreTargetAngle = (Mathf.Atan2(direction.z, direction.x) * -Mathf.Rad2Deg + 90.0f);
+
+            upperTargetAngle = 90.0f - Mathf.Asin((distance * 0.5f) / handLength) * Mathf.Rad2Deg * 2.0f;
+            lowerTargetAngle = 136.0f - Mathf.Acos((distance * 0.5f) / handLength) * Mathf.Rad2Deg;
+        }
+
         private void OnTriggerStay(Collider other)
         {
-            if (other.CompareTag("Movable") && target == null && state == State.STATE_DEFAULT)
+            if (other.CompareTag("Movable") && ToMove == null && state == State.STATE_DEFAULT)
             {
-                target = other.transform;
+                var movable = other.GetComponent<Movable>();
+                if (movable != lastMoved)
+                {
+                    ToMove = movable;
+                    lastMoved = movable;
+                }
             }
         }
     }
