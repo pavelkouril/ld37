@@ -9,21 +9,22 @@ public class Hand : MonoBehaviour
     public Transform lowerHand;
     public Transform upperHand;
     public Transform target;
+    private Transform grabbedObject;
 
     public enum State
     {
         STATE_DEFAULT,
-        STATE_HORIZONTAL
+        STATE_GRABBED
     }
 
-    public State state;
+    private State state;
     private float handLength = 1.0f;
-    public float coreAngle;
-    public float coreTargetAngle;
-    public float lowerAngle;
-    public float lowerTargetAngle;
-    public float upperAngle;
-    public float upperTargetAngle;
+    private float coreAngle;
+    private float coreTargetAngle;
+    private float lowerAngle;
+    private float lowerTargetAngle;
+    private float upperAngle;
+    private float upperTargetAngle;
 
     void Start()
     {
@@ -62,32 +63,64 @@ public class Hand : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Calculate direction to target and update Core (vertical axis) angle
-        Vector3 direction = target.position - core.position;
-        coreTargetAngle = (Mathf.Atan2(direction.z, direction.x) * -Mathf.Rad2Deg + 90.0f);
+        if (target)
+        {
+            float distance = Vector3.Distance(target.position, core.position);
+
+            Vector3 direction = target.position - core.position;
+            coreTargetAngle = (Mathf.Atan2(direction.z, direction.x) * -Mathf.Rad2Deg + 90.0f);
+
+            upperTargetAngle = 90.0f - Mathf.Asin((distance * 0.5f) / handLength) * Mathf.Rad2Deg * 2.0f;
+            lowerTargetAngle = 136.0f - Mathf.Acos((distance * 0.5f) / handLength) * Mathf.Rad2Deg;
+        }
+        else
+        {
+            coreTargetAngle = 0.0f;
+            upperTargetAngle = 0.0f;
+            lowerTargetAngle = 0.0f;
+        }
 
         float coreDir = 0.0f;
-        AngleDirection(coreTargetAngle, coreAngle, out coreDir);
+        bool hReached = AngleDirection(coreTargetAngle, coreAngle, out coreDir);
         coreAngle += coreDir;
 
         core.localRotation = Quaternion.AngleAxis(coreAngle, new Vector3(0.0f, 0.0f, 1.0f));
 
-        // Calculate 2 angles using triangulation
-        float distance = Vector3.Distance(target.position, core.position);
-        upperTargetAngle = 90.0f - Mathf.Asin((distance * 0.5f) / handLength) * Mathf.Rad2Deg * 2.0f;
-        lowerTargetAngle = 136.0f - Mathf.Acos((distance * 0.5f) / handLength) * Mathf.Rad2Deg;
-
         float upperDir = 0.0f;
-        AngleDirection(upperTargetAngle, upperAngle, out upperDir);
+        bool uReached = AngleDirection(upperTargetAngle, upperAngle, out upperDir);
         upperAngle += upperDir;
 
         float lowerDir = 0.0f;
-        AngleDirection(lowerTargetAngle, lowerAngle, out lowerDir);
+        bool lReached = AngleDirection(lowerTargetAngle, lowerAngle, out lowerDir);
         lowerAngle += lowerDir;
 
         lowerHand.localRotation = Quaternion.AngleAxis(lowerAngle, new Vector3(1.0f, 0.0f, 0.0f));
         upperHand.localRotation = Quaternion.AngleAxis(upperAngle, new Vector3(1.0f, 0.0f, 0.0f));
+        
+        if (hReached && uReached && lReached)
+        {
+            switch (state)
+            {
+                case State.STATE_DEFAULT:
+                    if (target != null)
+                    {
+                        target.parent = upperHand.transform;
+                        target.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                        grabbedObject = target;
+                        target = null;
+                        state = State.STATE_GRABBED;
+                    }
+                    break;
 
-        Debug.Log("Distance " + distance);
+                case State.STATE_GRABBED:
+                    if (grabbedObject != null)
+                    {
+                        grabbedObject.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                        grabbedObject = null;
+                    }
+                    state = State.STATE_DEFAULT;
+                    break;
+            }
+        }
     }
 }
