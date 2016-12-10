@@ -24,6 +24,7 @@ namespace OneRoomFactory.Machines
         private Dictionary<MovableType, int> storedMovables = new Dictionary<MovableType, int>();
 
         private IEnumerator coroutine;
+        private bool coroutineRunning = false;
 
         private void Start()
         {
@@ -43,8 +44,9 @@ namespace OneRoomFactory.Machines
                 {
                     storedMovables[movable.Type] = movable.Units;
                     Destroy(movable.gameObject);
-                    if (HasEnoughResources())
+                    if (HasEnoughResources() && !coroutineRunning)
                     {
+                        coroutineRunning = true;
                         StartCoroutine(coroutine);
                     }
                 }
@@ -66,6 +68,7 @@ namespace OneRoomFactory.Machines
                 }
                 else
                 {
+                    coroutineRunning = false;
                     yield break;
                 }
             }
