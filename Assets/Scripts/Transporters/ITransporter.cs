@@ -9,6 +9,7 @@ namespace OneRoomFactory.Transporters
     {
         Tile Input { get; }
         Tile Output { get; }
+        Movable ToMove { get; set; }
 
         void Transport();
     }

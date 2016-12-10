@@ -26,6 +26,9 @@ namespace OneRoomFactory.Managers
                 {
                     var pos = new Vector3((-Size / 2.0f) + i + 0.5f, 0.01f, (-Size / 2.0f) + j + 0.5f);
                     Tiles[i, j] = Instantiate(Prefab, pos, Quaternion.Euler(90, 0, 0), TilesParent) as Tile;
+                    Tiles[i, j].TileManager = this;
+                    Tiles[i, j].PosX = i;
+                    Tiles[i, j].PosY = i;
                     Tiles[i, j].GetComponent<MeshRenderer>().material = (i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1) ? Mat1 : Mat2;
                 }
             }

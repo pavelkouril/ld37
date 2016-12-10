@@ -7,5 +7,6 @@ namespace OneRoomFactory.Factory
     public interface IBuildable
     {
         Tile Tile { get; set; }
+        BuildRotation Rotation { get; set; }
     }
 }
