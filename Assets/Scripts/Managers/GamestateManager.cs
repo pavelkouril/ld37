@@ -8,6 +8,7 @@ namespace OneRoomFactory.Managers
     public class GamestateManager : MonoBehaviour
     {
         public int GameLengthInSeconds = 600;
+        public bool ShowTutorial = true;
         public int RemaningTimeInSeconds { get; set; }
 
         private UIManager uiManager;
@@ -24,7 +25,14 @@ namespace OneRoomFactory.Managers
             RemaningTimeInSeconds = GameLengthInSeconds;
             uiManager.UpdateTimer(TimeSpan.FromSeconds(RemaningTimeInSeconds));
             StartCoroutine(UpdateTime());
-            StartCoroutine(ShowBasicInfo());
+            if (ShowTutorial)
+            {
+                StartCoroutine(ShowBasicInfo());
+            }
+            else
+            {
+                uiManager.EnablePlaying();
+            }
         }
 
         private IEnumerator ShowBasicInfo()

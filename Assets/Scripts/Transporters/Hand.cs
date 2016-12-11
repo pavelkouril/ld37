@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using OneRoomFactory.Factory;
 using UnityEngine;
+using OneRoomFactory.Managers;
 
 namespace OneRoomFactory.Transporters
 {
@@ -12,7 +13,8 @@ namespace OneRoomFactory.Transporters
         public Transform core;
         public Transform lowerHand;
         public Transform upperHand;
-        public Transform target;
+        public LayerMask MovableLayer;
+
         private Transform grabbedObject;
 
         public override TransporterType Type { get { return TransporterType.Hand; } }
@@ -73,15 +75,35 @@ namespace OneRoomFactory.Transporters
 
         void FixedUpdate()
         {
+            if (Output == null)
+            {
+                return;
+            }
+
+            if (ToMove == null && state == State.STATE_DEFAULT)
+            {
+                foreach (var collider in Physics.OverlapSphere(transform.position, 2, MovableLayer))
+                {
+                    var movable = collider.GetComponent<Movable>();
+                    if (lastMoved == null || movable != lastMoved)
+                    {
+                        ToMove = movable;
+                        lastMoved = movable;
+                        break;
+                    }
+                }
+            }
+
             if (ToMove != null)
             {
                 CalculateAnglesForTransform(ToMove.transform);
             }
             else
             {
-                coreTargetAngle = 0.0f;
-                upperTargetAngle = 0.0f;
-                lowerTargetAngle = 0.0f;
+                CalculateAnglesForTransform(ToMove.transform);
+                //coreTargetAngle = 0.0f;
+                //upperTargetAngle = 0.0f;
+                //lowerTargetAngle = 0.0f;
             }
 
             float coreDir = 0.0f;
@@ -140,17 +162,9 @@ namespace OneRoomFactory.Transporters
             lowerTargetAngle = 136.0f - Mathf.Acos((distance * 0.5f) / handLength) * Mathf.Rad2Deg;
         }
 
-        private void OnTriggerStay(Collider other)
+        private void OnMouseDown()
         {
-            if (other.CompareTag("Movable") && ToMove == null && state == State.STATE_DEFAULT)
-            {
-                var movable = other.GetComponent<Movable>();
-                if (movable != lastMoved)
-                {
-                    ToMove = movable;
-                    lastMoved = movable;
-                }
-            }
+            Tile.TileManager.UIManager.ShowHandPanel(this);
         }
     }
 }

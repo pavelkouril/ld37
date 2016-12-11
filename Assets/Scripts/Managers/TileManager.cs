@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using OneRoomFactory.Transporters;
 
 namespace OneRoomFactory.Managers
 {
@@ -11,11 +12,19 @@ namespace OneRoomFactory.Managers
         public int Size = 10;
         public Tile Prefab;
         public Transform TilesParent;
+        public LayerMask TileLayer;
 
         public Tile[,] Tiles { get; private set; }
+        public UIManager UIManager { get; private set; }
+
+        private ConstructionManager constructionManager;
+
+        private Hand selectingForHand;
 
         private void Awake()
         {
+            UIManager = GetComponent<UIManager>();
+            constructionManager = GetComponent<ConstructionManager>();
             Tiles = new Tile[Size, Size];
             for (var i = 0; i < Size; i++)
             {
@@ -50,6 +59,38 @@ namespace OneRoomFactory.Managers
             Tiles[18, 18].IsFree = false;
         }
 
+        private void Update()
+        {
+            if (selectingForHand != null && Input.GetMouseButton(1))
+            {
+                constructionManager.HideBuildingMode();
+                selectingForHand = null;
+            }
+            if (selectingForHand != null)
+            {
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, 100, TileLayer))
+                {
+                    if (hit.collider.CompareTag("Tile"))
+                    {
+                        var tile = hit.collider.gameObject.GetComponent<Tile>();
+                        if (tile.IsFree && Vector3.Distance(tile.transform.position, selectingForHand.transform.position) <= 2)
+                        {
+                            Debug.Log("over free tile");
+                            if (Input.GetMouseButton(0))
+                            {
+                                selectingForHand.Output = tile;
+                                selectingForHand = null;
+                                constructionManager.HideBuildingMode();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void ShowTiles()
         {
             TilesParent.gameObject.SetActive(true);
@@ -58,6 +99,11 @@ namespace OneRoomFactory.Managers
         public void HideTiles()
         {
             TilesParent.gameObject.SetActive(false);
+        }
+
+        public void SelectTargetTileForHand(Hand hand)
+        {
+            selectingForHand = hand;
         }
     }
 }

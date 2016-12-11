@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using OneRoomFactory.Transporters;
 using UnityEngine;
 using UnityEngine.UI;
+using OneRoomFactory.Factory;
 
 namespace OneRoomFactory.Managers
 {
@@ -11,11 +13,14 @@ namespace OneRoomFactory.Managers
     {
         public GameObject PauseMenu;
         public GameObject BuildMenu;
+        public GameObject HandMenu;
         public GameObject PlayGUI;
         public Text TimerText;
         public Text MoneyBalanceText;
         public GameObject TextBackground;
         public Text TextMessage;
+
+        public Hand selectedHand;
 
         private bool gamePaused;
         private bool enableInputs = false;
@@ -69,6 +74,7 @@ namespace OneRoomFactory.Managers
 
         public void PauseGame()
         {
+            HandMenu.SetActive(false);
             PlayGUI.SetActive(false);
             BuildMenu.SetActive(false);
             constructionManager.HideBuildingMode();
@@ -103,6 +109,7 @@ namespace OneRoomFactory.Managers
         public void ShowBuildMenu()
         {
             constructionManager.HideBuildingMode();
+            HandMenu.SetActive(false);
             BuildMenu.SetActive(true);
         }
 
@@ -122,6 +129,29 @@ namespace OneRoomFactory.Managers
         {
             yield return new WaitForSeconds(seconds);
             TextBackground.SetActive(false);
+        }
+
+        public void ShowHandPanel(Hand hand)
+        {
+            BuildMenu.SetActive(false);
+            HandMenu.SetActive(true);
+            selectedHand = hand;
+        }
+
+        public void SelectTargetForHand()
+        {
+            HandMenu.SetActive(false);
+            if (selectedHand != null)
+            {
+                selectedHand.Tile.TileManager.ShowTiles();
+                selectedHand.Tile.TileManager.SelectTargetTileForHand(selectedHand);
+            }
+        }
+
+        public void ChangeHandType(int type)
+        {
+            HandMenu.SetActive(false);
+            selectedHand.AcceptedType = (MovableType)type;
         }
     }
 }
