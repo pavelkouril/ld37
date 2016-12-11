@@ -41,6 +41,8 @@ namespace OneRoomFactory.Managers
             uiManager.DisplayText("First you need to transfer <b>Cuprexit</b> to <b>UV Station</b>.", 5);
             yield return new WaitForSeconds(6);
             uiManager.DisplayText("Press <b>B</b> or click on the <b>Build</b> icon to open <b>Buy menu</b>.", 5);
+            yield return new WaitForSeconds(6);
+            uiManager.EnablePlaying();
         }
 
         private IEnumerator UpdateTime()

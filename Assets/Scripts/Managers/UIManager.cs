@@ -18,6 +18,7 @@ namespace OneRoomFactory.Managers
         public Text TextMessage;
 
         private bool gamePaused;
+        private bool enableInputs = false;
 
         private ConstructionManager constructionManager;
         private MoneyManager moneyManager;
@@ -29,20 +30,23 @@ namespace OneRoomFactory.Managers
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.B) && !gamePaused)
+            if (enableInputs)
             {
-                ShowBuildMenu();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (!gamePaused)
+                if (Input.GetKeyDown(KeyCode.B) && !gamePaused)
                 {
-                    PauseGame();
+                    ShowBuildMenu();
                 }
-                else
+
+                if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    ResumeGame();
+                    if (!gamePaused)
+                    {
+                        PauseGame();
+                    }
+                    else
+                    {
+                        ResumeGame();
+                    }
                 }
             }
         }
@@ -73,6 +77,12 @@ namespace OneRoomFactory.Managers
             PauseMenu.SetActive(false);
             Time.timeScale = 1;
             gamePaused = false;
+        }
+
+        public void EnablePlaying()
+        {
+            PlayGUI.SetActive(true);
+            enableInputs = true;
         }
 
         public void QuitToMenu()
