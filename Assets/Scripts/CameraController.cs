@@ -72,36 +72,28 @@ public class CameraController : MonoBehaviour
 
         mousePosition.x = Input.mousePosition.x;
         mousePosition.y = Input.mousePosition.y;
-
-        Vector3 R = Vector3.right;
-        R.y = 0.0f;
-        R.Normalize();
-
-        Vector3 F = Vector3.forward;
-        F.y = 0.0f;
-        F.Normalize();
-        
-        float H = Input.GetAxis("Horizontal");
-        float V = Input.GetAxis("Vertical");
+                
+        float H = -Input.GetAxis("Horizontal");
+        float V = -Input.GetAxis("Vertical");
         float x;
         float z;
 
         if (mousePosition.x < scrollArea)
         {
-            H -= 1.0f;
+            H += 1.0f;
         }
         else if (mousePosition.x > Screen.width - scrollArea)
         {
-            H += 1.0f;
+            H -= 1.0f;
         }
 
         if (mousePosition.y < scrollArea)
         {
-            V -= 1.0f;
+            V += 1.0f;
         }
         else if (mousePosition.y > Screen.height - scrollArea)
         {
-            V += 1.0f;
+            V -= 1.0f;
         }
 
         H = Mathf.Clamp(H, -1.0f, 1.0f);
