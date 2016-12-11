@@ -52,6 +52,9 @@ namespace OneRoomFactory.Managers
 
         private bool isGoingToBuildAcidStation = false;
         private bool isGoingToBuildAssemblyStation = false;
+        private bool isGoingToBuildUVStation = false;
+
+        private bool isFirstBuild = true;
 
         private void Awake()
         {
@@ -95,7 +98,7 @@ namespace OneRoomFactory.Managers
 
         public void BuildBeltButtonClicked()
         {
-            ResetConstructionParameters();
+            PrepareBuilding();
             modelToPlace = beltModel;
             prefabToPlace = BeltPrefab;
             modelToPlace.transform.rotation = Quaternion.identity;
@@ -104,7 +107,7 @@ namespace OneRoomFactory.Managers
 
         public void BuildHandButtonClicked()
         {
-            ResetConstructionParameters();
+            PrepareBuilding();
             modelToPlace = robotHandModel;
             prefabToPlace = RobotHandPrefab;
             modelToPlace.transform.rotation = robotHandModelRot;
@@ -114,16 +117,17 @@ namespace OneRoomFactory.Managers
 
         public void BuildUVStationButtonClicked()
         {
-            ResetConstructionParameters();
+            PrepareBuilding();
             modelToPlace = uvStationModel;
             prefabToPlace = UVStationPrefab;
             modelToPlace.transform.rotation = Quaternion.identity;
             modelToPlace.SetActive(true);
+            isGoingToBuildUVStation = true;
         }
 
         public void BuildAcidSinkButtonClicked()
         {
-            ResetConstructionParameters();
+            PrepareBuilding();
             modelToPlace = acidSinkStationModel;
             prefabToPlace = AcidSinkStationPrefab;
             modelToPlace.transform.rotation = Quaternion.identity;
@@ -133,7 +137,7 @@ namespace OneRoomFactory.Managers
 
         public void BuildCleanerButtonClicked()
         {
-            ResetConstructionParameters();
+            PrepareBuilding();
             modelToPlace = cleaningStationModel;
             prefabToPlace = CleaningStationPrefab;
             modelToPlace.transform.rotation = Quaternion.identity;
@@ -142,7 +146,7 @@ namespace OneRoomFactory.Managers
 
         public void BuildDrillerButtonClicked()
         {
-            ResetConstructionParameters();
+            PrepareBuilding();
             modelToPlace = drillingStationModel;
             prefabToPlace = DrillingStationPrefab;
             modelToPlace.transform.rotation = Quaternion.identity;
@@ -151,7 +155,7 @@ namespace OneRoomFactory.Managers
 
         public void BuildAssemblerButtonClicked()
         {
-            ResetConstructionParameters();
+            PrepareBuilding();
             modelToPlace = assemblyStationModel;
             prefabToPlace = AssemblyStationPrefab;
             modelToPlace.transform.rotation = Quaternion.identity;
@@ -159,14 +163,20 @@ namespace OneRoomFactory.Managers
             isGoingToBuildAssemblyStation = true;
         }
 
-        private void ResetConstructionParameters()
+        private void PrepareBuilding()
         {
+            if (isFirstBuild)
+            {
+                isFirstBuild = false;
+                uiManager.DisplayText("You need to place machines on the tiles. Rotation matters, so press <b>R</b> to <b>rotate the objects</b>. If you do a mistake, press <b>D</b> to <b>enter destroy mode</b>.", 6);
+            }
             uiManager.HideBuildMenu();
             tileManager.ShowTiles();
             currentBuildRotation = BuildRotation.Right;
             currentVectorRotation = Vector3.zero;
             isGoingToBuildAcidStation = false;
             isGoingToBuildAssemblyStation = false;
+            isGoingToBuildUVStation = false;
         }
 
         public void EnterDestroyMode()
@@ -258,6 +268,10 @@ namespace OneRoomFactory.Managers
             if (isGoingToBuildAssemblyStation)
             {
                 gamestateManager.StartShippingElectronics();
+            }
+            if (isGoingToBuildUVStation)
+            {
+                gamestateManager.StartShippingCuprexit();
             }
         }
 

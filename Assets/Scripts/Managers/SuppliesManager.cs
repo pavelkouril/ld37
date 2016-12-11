@@ -31,16 +31,9 @@ namespace OneRoomFactory.Managers
         public int ElectronicsWaitTime;
         public bool ElectronicsAccepted;
 
-        private void Start()
+        public IEnumerator ShipCuprexit()
         {
-            StartCoroutine(ShipCuprexit());
-            StartCoroutine(ShipAcid());
-            StartCoroutine(ShipElectronics());
-        }
-
-        private IEnumerator ShipCuprexit()
-        {
-            yield return new WaitForSeconds(20);
+            yield return new WaitForSeconds(10);
             while (true)
             {
                 if (CuprexitAccepted)
@@ -56,8 +49,9 @@ namespace OneRoomFactory.Managers
             }
         }
 
-        private IEnumerator ShipAcid()
+        public IEnumerator ShipAcid()
         {
+            yield return new WaitForSeconds(10);
             while (true)
             {
                 if (AcidAccepted)
@@ -72,8 +66,9 @@ namespace OneRoomFactory.Managers
             }
         }
 
-        private IEnumerator ShipElectronics()
+        public IEnumerator ShipElectronics()
         {
+            yield return new WaitForSeconds(10);
             while (true)
             {
                 if (ElectronicsPrefab)

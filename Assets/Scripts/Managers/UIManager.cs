@@ -95,11 +95,11 @@ namespace OneRoomFactory.Managers
             BuildMenu.SetActive(false);
         }
 
-        public void DisplayText(string text)
+        public void DisplayText(string text, int duration)
         {
             TextBackground.SetActive(true);
             TextMessage.text = text;
-            StartCoroutine(HideTextAfter(5));
+            StartCoroutine(HideTextAfter(duration));
         }
 
         private IEnumerator HideTextAfter(int seconds)
