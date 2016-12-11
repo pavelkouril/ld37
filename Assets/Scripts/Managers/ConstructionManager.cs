@@ -3,6 +3,7 @@ using OneRoomFactory.Transporters;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace OneRoomFactory.Managers
 {
@@ -17,6 +18,7 @@ namespace OneRoomFactory.Managers
 
         private TileManager tileManager;
         private UIManager uiManager;
+        private MoneyManager moneyManager;
 
         private GameObject modelToPlace;
         private Buildable prefabToPlace;
@@ -39,6 +41,7 @@ namespace OneRoomFactory.Managers
         {
             tileManager = GetComponent<TileManager>();
             uiManager = GetComponent<UIManager>();
+            moneyManager = GetComponent<MoneyManager>();
         }
 
         private void Start()
@@ -59,42 +62,30 @@ namespace OneRoomFactory.Managers
 
         public void BuildBeltButtonClicked()
         {
-            currentBuildRotation = BuildRotation.Right;
-            currentVectorRotation = Vector3.zero;
+            ResetConstructionParameters();
             modelToPlace = beltModel;
             prefabToPlace = BeltPrefab;
             modelToPlace.transform.rotation = Quaternion.identity;
             modelToPlace.SetActive(true);
-            tileManager.ShowTiles();
-            currentPrice = BeltPrefab.Price;
-            uiManager.HideBuildMenu();
         }
 
         public void BuildHandButtonClicked()
         {
-            currentBuildRotation = BuildRotation.Right;
-            currentVectorRotation = Vector3.zero;
+            ResetConstructionParameters();
             modelToPlace = robotHandModel;
             prefabToPlace = RobotHandPrefab;
             modelToPlace.transform.rotation = robotHandModelRot;
             modelToPlace.SetActive(true);
-            tileManager.ShowTiles();
             canRotate = false;
-            currentPrice = RobotHandPrefab.Price;
-            uiManager.HideBuildMenu();
         }
 
         public void BuildUVStationButtonClicked()
         {
-            currentBuildRotation = BuildRotation.Right;
-            currentVectorRotation = Vector3.zero;
+            ResetConstructionParameters();
             modelToPlace = uvStationModel;
             prefabToPlace = UVStationPrefab;
             modelToPlace.transform.rotation = Quaternion.identity;
             modelToPlace.SetActive(true);
-            tileManager.ShowTiles();
-            currentPrice = UVStationPrefab.Price;
-            uiManager.HideBuildMenu();
         }
 
         public void BuildAcidSinkButtonClicked()
@@ -117,18 +108,31 @@ namespace OneRoomFactory.Managers
 
         }
 
+        private void ResetConstructionParameters()
+        {
+            uiManager.HideBuildMenu();
+            tileManager.ShowTiles();
+            currentBuildRotation = BuildRotation.Right;
+            currentVectorRotation = Vector3.zero;
+        }
+
+        public void EnterDestroyMode()
+        {
+            uiManager.HideBuildMenu();
+            tileManager.ShowTiles();
+            isDestroying = true;
+        }
+
         private void Update()
         {
             if (modelToPlace == null && Input.GetKeyDown(KeyCode.D))
             {
-                tileManager.ShowTiles();
-                isDestroying = true;
+                EnterDestroyMode();
             }
 
             if ((modelToPlace != null || isDestroying) && Input.GetMouseButton(1))
             {
                 HideBuildingMode();
-                isDestroying = false;
             }
 
             if (modelToPlace != null)
@@ -149,7 +153,7 @@ namespace OneRoomFactory.Managers
                     if (hit.collider.CompareTag("Tile"))
                     {
                         var tile = hit.collider.gameObject.GetComponent<Tile>();
-                        if (tile.IsFree)
+                        if (tile.IsFree && moneyManager.CanPay(prefabToPlace.Price))
                         {
                             modelToPlace.GetComponent<MeshRenderer>().material.color = new Color(0, 1, 0, 0.2f);
                             if (Input.GetMouseButton(0))
@@ -193,6 +197,7 @@ namespace OneRoomFactory.Managers
             buildable.transform.Rotate(currentVectorRotation);
             buildable.Rotation = currentBuildRotation;
             tile.Build(buildable);
+            moneyManager.Pay(prefabToPlace.Price);
         }
 
         private void Clear(Tile tile)
@@ -202,6 +207,7 @@ namespace OneRoomFactory.Managers
 
         public void HideBuildingMode()
         {
+            isDestroying = false;
             tileManager.HideTiles();
             if (modelToPlace != null)
             {
