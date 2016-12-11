@@ -10,7 +10,7 @@ namespace OneRoomFactory.Factory
 {
     public class Tile : MonoBehaviour
     {
-        public bool IsFree { get { return BuiltObject == null; } }
+        public bool IsFree = true;
 
         public IBuildable BuiltObject { get; private set; }
 
@@ -23,12 +23,22 @@ namespace OneRoomFactory.Factory
         public Tile NeighbourRight { get; set; }
         public Tile NeighbourUp { get; set; }
         public Tile NeighbourDown { get; set; }
-
-
-        internal void Build(IBuildable obj)
+        
+        public void Build(IBuildable obj)
         {
             BuiltObject = obj;
             obj.Tile = this;
+            IsFree = false;
+            Debug.Log("built at " + PosX + "," + PosY);
+        }
+
+        public void Clean()
+        {
+            if (BuiltObject != null)
+            {
+                BuiltObject = null;
+                IsFree = true;
+            }
         }
     }
 }

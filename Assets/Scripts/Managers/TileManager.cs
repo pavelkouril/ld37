@@ -46,6 +46,14 @@ namespace OneRoomFactory.Managers
             }
         }
 
+        private void Start()
+        {
+            Tiles[6, 6].IsFree = false;
+            Tiles[6, 18].IsFree = false;
+            Tiles[18, 6].IsFree = false;
+            Tiles[18, 18].IsFree = false;
+        }
+
         public void ShowTiles()
         {
             TilesParent.gameObject.SetActive(true);
