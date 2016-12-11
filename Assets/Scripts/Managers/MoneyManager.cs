@@ -6,8 +6,13 @@ namespace OneRoomFactory.Managers
 {
     public class MoneyManager : MonoBehaviour
     {
-        public int StartingCash = 100;
+        public int StartingCash = 25000;
         public int Balance { get; private set; }
+
+        private void Start()
+        {
+            Balance = StartingCash;
+        }
 
         public bool CanPay(int cost)
         {
