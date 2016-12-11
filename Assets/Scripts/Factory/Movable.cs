@@ -11,6 +11,7 @@ namespace OneRoomFactory.Factory
         public MovableType Type;
         public int Units = 1;
         public ITransporter TransportedBy;
+        public bool isGrabbed = false;
 
         private Vector3 moveTarget = Vector3.down; //magical values that cant be reached normally by our game, Vector3 isn nullable :(
         private Vector3 nextTarget = Vector3.down; //magical values that cant be reached normally by our game, Vector3 isn nullable :(
@@ -24,7 +25,7 @@ namespace OneRoomFactory.Factory
 
         private void FixedUpdate()
         {
-            if (moveTarget != Vector3.down)
+            if (moveTarget != Vector3.down && !isGrabbed)
             {
                 transform.position = Vector3.MoveTowards(transform.position, moveTarget, Time.fixedDeltaTime);
                 if (Vector3.Distance(transform.position, moveTarget) < 0.5f)
@@ -37,7 +38,7 @@ namespace OneRoomFactory.Factory
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.collider.CompareTag("Transporter"))
+            if (collision.collider.CompareTag("Transporter") && !isGrabbed)
             {
                 var trans = collision.collider.GetComponent<ITransporter>();
                 if (trans.Type == TransporterType.Belt)

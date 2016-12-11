@@ -8,6 +8,15 @@ namespace OneRoomFactory.Factory
     {
         private void OnTriggerEnter(Collider other)
         {
+            if (other.gameObject.tag == "Movable")
+            {
+                Movable m = other.gameObject.GetComponent<Movable>();
+                if (m.isGrabbed)
+                {
+                    return;
+                }
+            }
+
             other.transform.position += Vector3.up * 2;
         }
     }

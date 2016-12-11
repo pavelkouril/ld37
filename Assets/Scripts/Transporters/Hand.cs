@@ -13,6 +13,7 @@ namespace OneRoomFactory.Transporters
         public Transform core;
         public Transform lowerHand;
         public Transform upperHand;
+        public Transform grabber;
         public LayerMask MovableLayer;
 
         private Transform grabbedObject;
@@ -22,7 +23,9 @@ namespace OneRoomFactory.Transporters
         public enum State
         {
             STATE_DEFAULT,
-            STATE_GRABBED
+            STATE_GRABBED,
+            STATE_LANDING,
+            STATE_HOMECOMING
         }
 
         private State state;
@@ -47,6 +50,7 @@ namespace OneRoomFactory.Transporters
             lowerTargetAngle = 0.0f;
             upperAngle = 0.0f;
             upperTargetAngle = 0.0f;
+            lastMoved = null;
         }
 
         private bool AngleDirection(float targetAngle, float angle, out float direction)
@@ -82,7 +86,7 @@ namespace OneRoomFactory.Transporters
 
             if (ToMove == null && state == State.STATE_DEFAULT)
             {
-                foreach (var collider in Physics.OverlapSphere(transform.position, 2, MovableLayer))
+                foreach (var collider in Physics.OverlapSphere(transform.position, 2.5f, MovableLayer))
                 {
                     var movable = collider.GetComponent<Movable>();
                     if (lastMoved == null || movable != lastMoved)
@@ -94,72 +98,108 @@ namespace OneRoomFactory.Transporters
                 }
             }
 
+            float distance = 0.0f;
+
             if (ToMove != null)
             {
-                CalculateAnglesForTransform(ToMove.transform);
+                distance = CalculateAnglesForTransform(ToMove.transform);
             }
             else
             {
-                CalculateAnglesForTransform(Output.transform);
-                //coreTargetAngle = 0.0f;
-                //upperTargetAngle = 0.0f;
-                //lowerTargetAngle = 0.0f;
+                if (state == State.STATE_LANDING && grabbedObject != null)
+                {
+                    CalculateAnglesForTransform(Output.transform);
+                }
+                else
+                {
+                    coreTargetAngle = 0.0f;
+                    upperTargetAngle = 0.0f;
+                    lowerTargetAngle = 0.0f;
+                }
             }
 
-            float coreDir = 0.0f;
-            bool hReached = AngleDirection(coreTargetAngle, coreAngle, out coreDir);
-            coreAngle += coreDir;
-
-            core.localRotation = Quaternion.AngleAxis(coreAngle, new Vector3(0.0f, 0.0f, 1.0f));
-
-            float upperDir = 0.0f;
-            bool uReached = AngleDirection(upperTargetAngle, upperAngle, out upperDir);
-            upperAngle += upperDir;
-
-            float lowerDir = 0.0f;
-            bool lReached = AngleDirection(lowerTargetAngle, lowerAngle, out lowerDir);
-            lowerAngle += lowerDir;
-
-            lowerHand.localRotation = Quaternion.AngleAxis(lowerAngle, new Vector3(1.0f, 0.0f, 0.0f));
-            upperHand.localRotation = Quaternion.AngleAxis(upperAngle, new Vector3(1.0f, 0.0f, 0.0f));
-
-            if (hReached && uReached && lReached)
+            if (distance > 1.9995f)
             {
-                switch (state)
-                {
-                    case State.STATE_DEFAULT:
-                        if (ToMove != null)
-                        {
-                            ToMove.transform.parent = upperHand.transform;
-                            ToMove.GetComponent<Rigidbody>().isKinematic = true;
-                            grabbedObject = ToMove.transform;
-                            ToMove = null;
-                            state = State.STATE_GRABBED;
-                        }
-                        break;
+                ToMove = null;
+            }
+            else
+            {
+                float coreDir = 0.0f;
+                bool hReached = AngleDirection(coreTargetAngle, coreAngle, out coreDir);
+                coreAngle += coreDir;
 
-                    case State.STATE_GRABBED:
-                        if (grabbedObject != null)
-                        {
-                            grabbedObject.GetComponent<Rigidbody>().isKinematic = false;
-                            grabbedObject.transform.parent = null;
-                            grabbedObject = null;
-                        }
-                        state = State.STATE_DEFAULT;
-                        break;
+                core.localRotation = Quaternion.AngleAxis(coreAngle, new Vector3(0.0f, 0.0f, 1.0f));
+
+                float upperDir = 0.0f;
+                bool uReached = AngleDirection(upperTargetAngle, upperAngle, out upperDir);
+                upperAngle += upperDir;
+
+                float lowerDir = 0.0f;
+                bool lReached = AngleDirection(lowerTargetAngle, lowerAngle, out lowerDir);
+                lowerAngle += lowerDir;
+
+                lowerHand.localRotation = Quaternion.AngleAxis(lowerAngle, new Vector3(1.0f, 0.0f, 0.0f));
+                upperHand.localRotation = Quaternion.AngleAxis(upperAngle, new Vector3(1.0f, 0.0f, 0.0f));
+
+                if (hReached && uReached && lReached)
+                {
+                    switch (state)
+                    {
+                        case State.STATE_DEFAULT:
+                            if (ToMove != null)
+                            {
+                                ToMove.transform.parent = grabber.transform;
+                                ToMove.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                                ToMove.transform.localRotation = Quaternion.AngleAxis(0.0f, new Vector3(0.0f, 1.0f, 0.0f));
+                                ToMove.GetComponent<Rigidbody>().isKinematic = true;
+                                ToMove.GetComponent<Rigidbody>().useGravity = false;
+                                ToMove.isGrabbed = true;
+                                grabbedObject = ToMove.transform;
+                                ToMove = null;
+                                state = State.STATE_GRABBED;
+                            }
+                            break;
+
+                        case State.STATE_GRABBED:
+                            state = State.STATE_LANDING;
+                            break;
+
+                        case State.STATE_LANDING:
+                            if (grabbedObject != null)
+                            {
+                                grabbedObject.GetComponent<Rigidbody>().isKinematic = false;
+                                grabbedObject.GetComponent<Rigidbody>().useGravity = true;
+                                grabbedObject.GetComponent<Movable>().isGrabbed = false;
+                                grabbedObject.transform.parent = null;
+                                grabbedObject = null;
+                            }
+                            state = State.STATE_HOMECOMING;
+                            break;
+
+                        case State.STATE_HOMECOMING:
+                            state = State.STATE_DEFAULT;
+                            break;
+                    }
                 }
             }
         }
 
-        private void CalculateAnglesForTransform(Transform t)
+        private float CalculateAnglesForTransform(Transform t)
         {
             float distance = Vector3.Distance(t.position, core.position);
+            float tmpDistance = distance;
+            if (tmpDistance > 1.9f)
+            {
+                tmpDistance = 1.9f;
+            }
 
             Vector3 direction = t.position - core.position;
             coreTargetAngle = (Mathf.Atan2(direction.z, direction.x) * -Mathf.Rad2Deg + 90.0f);
 
-            upperTargetAngle = 90.0f - Mathf.Asin((distance * 0.5f) / handLength) * Mathf.Rad2Deg * 2.0f;
-            lowerTargetAngle = 136.0f - Mathf.Acos((distance * 0.5f) / handLength) * Mathf.Rad2Deg;
+            upperTargetAngle = 90.0f - Mathf.Asin((tmpDistance * 0.5f) / handLength) * Mathf.Rad2Deg * 2.0f;
+            lowerTargetAngle = 136.0f - Mathf.Acos((tmpDistance * 0.5f) / handLength) * Mathf.Rad2Deg - 15.0f;  // 15 degrees for offset :D (Black magic)
+            
+            return distance;
         }
 
         private void OnMouseDown()
