@@ -11,15 +11,15 @@ namespace OneRoomFactory.Managers
     {
         public LayerMask TileLayer;
 
-        public GameObject BeltPrefab;
-        public GameObject RobotHandPrefab;
-        public GameObject UVStationPrefab;
+        public Buildable BeltPrefab;
+        public Buildable RobotHandPrefab;
+        public Buildable UVStationPrefab;
 
         private TileManager tileManager;
         private UIManager uiManager;
 
         private GameObject modelToPlace;
-        private GameObject prefabToPlace;
+        private Buildable prefabToPlace;
 
         private GameObject beltModel;
         private GameObject uvStationModel;
@@ -27,6 +27,7 @@ namespace OneRoomFactory.Managers
 
         private BuildRotation currentBuildRotation = BuildRotation.Right;
         private Vector3 currentVectorRotation = Vector3.zero;
+        private int currentPrice = 0;
 
         private bool canRotate = true;
 
@@ -65,6 +66,7 @@ namespace OneRoomFactory.Managers
             modelToPlace.transform.rotation = Quaternion.identity;
             modelToPlace.SetActive(true);
             tileManager.ShowTiles();
+            currentPrice = BeltPrefab.Price;
             uiManager.HideBuildMenu();
         }
 
@@ -78,6 +80,7 @@ namespace OneRoomFactory.Managers
             modelToPlace.SetActive(true);
             tileManager.ShowTiles();
             canRotate = false;
+            currentPrice = RobotHandPrefab.Price;
             uiManager.HideBuildMenu();
         }
 
@@ -90,6 +93,7 @@ namespace OneRoomFactory.Managers
             modelToPlace.transform.rotation = Quaternion.identity;
             modelToPlace.SetActive(true);
             tileManager.ShowTiles();
+            currentPrice = UVStationPrefab.Price;
             uiManager.HideBuildMenu();
         }
 
@@ -185,9 +189,8 @@ namespace OneRoomFactory.Managers
 
         private void Build(Tile tile)
         {
-            var obj = Instantiate(prefabToPlace, tile.transform.position, Quaternion.identity) as GameObject;
-            obj.transform.Rotate(currentVectorRotation);
-            var buildable = obj.GetComponent<Buildable>();
+            var buildable = Instantiate(prefabToPlace, tile.transform.position, Quaternion.identity);
+            buildable.transform.Rotate(currentVectorRotation);
             buildable.Rotation = currentBuildRotation;
             tile.Build(buildable);
         }
