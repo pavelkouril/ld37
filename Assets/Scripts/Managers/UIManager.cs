@@ -55,7 +55,7 @@ namespace OneRoomFactory.Managers
             TimerText.text = string.Format("{0:D2}:{1:D2}", time.Minutes, time.Seconds);
         }
 
-        private void PauseGame()
+        public void PauseGame()
         {
             PlayGUI.SetActive(false);
             BuildMenu.SetActive(false);
