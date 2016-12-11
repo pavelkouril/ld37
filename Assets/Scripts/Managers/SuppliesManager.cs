@@ -71,7 +71,7 @@ namespace OneRoomFactory.Managers
             yield return new WaitForSeconds(10);
             while (true)
             {
-                if (ElectronicsPrefab)
+                if (ElectronicsAccepted)
                 {
                     for (var i = 0; i < ElectronicsShipmentSize; i++)
                     {
