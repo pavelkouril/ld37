@@ -23,7 +23,7 @@ namespace OneRoomFactory.Managers
         private GameObject beltModel;
         private GameObject uvStationModel;
         private GameObject robotHandModel;
-        
+
         private BuildRotation currentBuildRotation = BuildRotation.Right;
         private Vector3 currentVectorRotation = Vector3.zero;
 
@@ -106,7 +106,7 @@ namespace OneRoomFactory.Managers
             {
                 if (Input.GetKeyDown(KeyCode.R) && canRotate)
                 {
-                    currentBuildRotation++;
+                    currentBuildRotation = (BuildRotation)(((int)currentBuildRotation + 1) % 4);
                     currentVectorRotation += new Vector3(0, -90, 0);
                     modelToPlace.transform.Rotate(new Vector3(0, -90, 0));
                 }
@@ -165,7 +165,6 @@ namespace OneRoomFactory.Managers
             var buildable = obj.GetComponent<Buildable>();
             buildable.Rotation = currentBuildRotation;
             tile.Build(buildable);
-            HideBuildingMode();
         }
 
         private void Clear(Tile tile)
