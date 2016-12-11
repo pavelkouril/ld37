@@ -12,9 +12,6 @@ namespace OneRoomFactory.Managers
         public Tile Prefab;
         public Transform TilesParent;
 
-        public Material Mat1;
-        public Material Mat2;
-
         public Tile[,] Tiles { get; private set; }
 
         private void Awake()
@@ -29,7 +26,6 @@ namespace OneRoomFactory.Managers
                     Tiles[i, j].TileManager = this;
                     Tiles[i, j].PosX = i;
                     Tiles[i, j].PosY = j;
-                    Tiles[i, j].GetComponent<MeshRenderer>().material = (i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1) ? Mat1 : Mat2;
                 }
             }
 
