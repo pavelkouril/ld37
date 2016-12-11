@@ -86,11 +86,12 @@ namespace OneRoomFactory.Transporters
 
             if (ToMove == null && state == State.STATE_DEFAULT)
             {
-                foreach (var collider in Physics.OverlapSphere(transform.position, 2.5f, MovableLayer))
+                foreach (var collider in Physics.OverlapSphere(transform.position, 2.2f, MovableLayer))
                 {
                     var movable = collider.GetComponent<Movable>();
                     if (lastMoved == null || movable != lastMoved)
                     {
+                        Debug.Log("Attached");
                         ToMove = movable;
                         lastMoved = movable;
                         break;
@@ -118,9 +119,10 @@ namespace OneRoomFactory.Transporters
                 }
             }
 
-            if (distance > 1.9995f)
+            if (distance > 2.2f)
             {
                 ToMove = null;
+                lastMoved = null;
             }
             else
             {
