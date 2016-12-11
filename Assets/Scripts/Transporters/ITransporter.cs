@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace OneRoomFactory.Transporters
 {
-    public interface ITransporter : IBuildable
+    abstract public class ITransporter : Buildable
     {
-        Tile Output { get; }
-        Movable ToMove { get; set; }
-        TransporterType Type { get; }
+        public Tile Output { get; set; }
+        public Movable ToMove { get; set; }
+        abstract public TransporterType Type { get; }
     }
 }

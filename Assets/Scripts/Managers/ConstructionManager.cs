@@ -31,6 +31,8 @@ namespace OneRoomFactory.Managers
 
         private Quaternion robotHandModelRot;
 
+        private bool isDestroying = false;
+
         private void Awake()
         {
             tileManager = GetComponent<TileManager>();
@@ -88,9 +90,16 @@ namespace OneRoomFactory.Managers
                 canRotate = false;
             }
 
-            if (modelToPlace != null && Input.GetMouseButton(1))
+            if (modelToPlace == null && Input.GetKeyDown(KeyCode.D))
+            {
+                tileManager.ShowTiles();
+                isDestroying = true;
+            }
+
+            if ((modelToPlace != null || isDestroying) && Input.GetMouseButton(1))
             {
                 HideBuildingMode();
+                isDestroying = false;
             }
 
             if (modelToPlace != null)
@@ -126,16 +135,43 @@ namespace OneRoomFactory.Managers
                     }
                 }
             }
+
+            if (isDestroying)
+            {
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, 100, TileLayer))
+                {
+                    if (hit.collider.CompareTag("Tile"))
+                    {
+                        var tile = hit.collider.gameObject.GetComponent<Tile>();
+                        if (tile.BuiltObject != null)
+                        {
+                            tile.CurrentMaterial = tile.ToClearMaterial;
+                            if (Input.GetMouseButton(0))
+                            {
+                                Clear(tile);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void Build(Tile tile)
         {
             var obj = Instantiate(prefabToPlace, tile.transform.position, Quaternion.identity) as GameObject;
             obj.transform.Rotate(currentVectorRotation);
-            var buildable = obj.GetComponent<IBuildable>();
+            var buildable = obj.GetComponent<Buildable>();
             buildable.Rotation = currentBuildRotation;
             tile.Build(buildable);
             HideBuildingMode();
+        }
+
+        private void Clear(Tile tile)
+        {
+            tile.Clear();
         }
 
         private void HideBuildingMode()

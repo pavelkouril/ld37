@@ -6,21 +6,13 @@ using UnityEngine;
 
 namespace OneRoomFactory.Transporters
 {
-    public class Belt : MonoBehaviour, ITransporter
+    public class Belt : ITransporter
     {
         public Transform InputCenter;
 
         public Tile Input { get; private set; }
 
-        public Tile Output { get; private set; }
-
-        public Tile Tile { get; set; }
-
-        public BuildRotation Rotation { get; set; }
-
-        public Movable ToMove { get; set; }
-
-        public TransporterType Type { get { return TransporterType.Belt; } }
+        public override TransporterType Type { get { return TransporterType.Belt; } }
 
         public Vector3 MoveVector { get { return moveVectors[Rotation]; } }
 

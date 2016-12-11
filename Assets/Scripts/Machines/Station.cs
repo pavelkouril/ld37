@@ -7,11 +7,8 @@ using System.Linq;
 
 namespace OneRoomFactory.Machines
 {
-    public class Station : MonoBehaviour, IBuildable
+    public class Station : Buildable
     {
-        public BuildRotation Rotation { get; set; }
-        public Tile Tile { get; set; }
-
         public List<MovableType> AcceptedMovableTypes = new List<MovableType>();
 
         public Transform OutputSpawnPoint;

@@ -12,7 +12,7 @@ namespace OneRoomFactory.Factory
     {
         public bool IsFree = true;
 
-        public IBuildable BuiltObject { get; private set; }
+        public Buildable BuiltObject { get; private set; }
 
         public TileManager TileManager { get; set; }
 
@@ -23,19 +23,32 @@ namespace OneRoomFactory.Factory
         public Tile NeighbourRight { get; set; }
         public Tile NeighbourUp { get; set; }
         public Tile NeighbourDown { get; set; }
-        
-        public void Build(IBuildable obj)
+
+        public Material CurrentMaterial { get { return renderer.material; } set { renderer.material = value; } }
+
+        public Material DefaultMaterial;
+        public Material ToClearMaterial;
+
+        private new Renderer renderer;
+
+        private void Awake()
+        {
+            renderer = GetComponent<MeshRenderer>();
+            CurrentMaterial = DefaultMaterial;
+        }
+
+        public void Build(Buildable obj)
         {
             BuiltObject = obj;
             obj.Tile = this;
             IsFree = false;
-            Debug.Log("built at " + PosX + "," + PosY);
         }
 
-        public void Clean()
+        public void Clear()
         {
             if (BuiltObject != null)
             {
+                Destroy(BuiltObject.gameObject);
                 BuiltObject = null;
                 IsFree = true;
             }

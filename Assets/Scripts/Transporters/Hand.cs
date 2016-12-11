@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace OneRoomFactory.Transporters
 {
-    public class Hand : MonoBehaviour, ITransporter
+    public class Hand : ITransporter
     {
         public float speed = 1.0f;
         public Transform core;
@@ -15,7 +15,7 @@ namespace OneRoomFactory.Transporters
         public Transform target;
         private Transform grabbedObject;
 
-        public TransporterType Type { get { return TransporterType.Hand; } }
+        public override TransporterType Type { get { return TransporterType.Hand; } }
 
         public enum State
         {
@@ -31,14 +31,6 @@ namespace OneRoomFactory.Transporters
         private float lowerTargetAngle;
         private float upperAngle;
         private float upperTargetAngle;
-
-        public Tile Output { get; private set; }
-
-        public Tile Tile { get; set; }
-
-        public BuildRotation Rotation { get; set; }
-
-        public Movable ToMove { get; set; }
 
         public MovableType AcceptedType;
 

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace OneRoomFactory.Factory
 {
-    public interface IBuildable
+    public abstract class Buildable : MonoBehaviour
     {
-        Tile Tile { get; set; }
-        BuildRotation Rotation { get; set; }
+        public Tile Tile { get; set; }
+        public BuildRotation Rotation { get; set; }
     }
 }
