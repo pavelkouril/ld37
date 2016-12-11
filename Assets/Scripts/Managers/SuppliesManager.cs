@@ -32,7 +32,7 @@ namespace OneRoomFactory.Managers
 
         private IEnumerator ShipCuprexit()
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(20);
             while (true)
             {
                 if (CuprexitAccepted)
@@ -49,7 +49,7 @@ namespace OneRoomFactory.Managers
 
         private IEnumerator ShipAcid()
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(20);
             while (true)
             {
                 if (AcidAccepted)

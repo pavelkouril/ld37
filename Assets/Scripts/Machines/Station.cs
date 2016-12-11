@@ -43,6 +43,7 @@ namespace OneRoomFactory.Machines
                     Destroy(movable.gameObject);
                     if (HasEnoughResources() && !coroutineRunning)
                     {
+                        coroutine = DoProduction();
                         coroutineRunning = true;
                         StartCoroutine(coroutine);
                     }
@@ -52,16 +53,17 @@ namespace OneRoomFactory.Machines
 
         private IEnumerator DoProduction()
         {
+            yield return new WaitForSeconds(ProductionRate);
             while (true)
             {
-                yield return new WaitForSeconds(ProductionRate);
                 if (HasEnoughResources())
                 {
                     foreach (var type in AcceptedMovableTypes)
                     {
                         storedMovables[type]--;
-                        Instantiate(OutputPrefab, OutputSpawnPoint.position, Quaternion.identity);
                     }
+                    Instantiate(OutputPrefab, OutputSpawnPoint.position, Quaternion.identity);
+                    yield return new WaitForSeconds(ProductionRate);
                 }
                 else
                 {
