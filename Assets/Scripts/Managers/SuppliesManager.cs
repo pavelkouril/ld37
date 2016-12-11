@@ -11,10 +11,13 @@ namespace OneRoomFactory.Managers
     public class SuppliesManager : MonoBehaviour
     {
         public Transform AcidSpawnPosition;
-        public Transform CuprexitSpawnPosition;
+        public Transform CuprexitSpawnPosition1;
+        public Transform CuprexitSpawnPosition2;
+        public Transform ElectronicsSpawnPosition;
 
         public Movable CuprexitPrefab;
         public Movable AcidPrefab;
+        public Movable ElectronicsPrefab;
 
         public int CuprexitShipmentSize;
         public int CuprexitWaitTime;
@@ -24,10 +27,15 @@ namespace OneRoomFactory.Managers
         public int AcidWaitTime;
         public bool AcidAccepted;
 
+        public int ElectronicsShipmentSize;
+        public int ElectronicsWaitTime;
+        public bool ElectronicsAccepted;
+
         private void Start()
         {
             StartCoroutine(ShipCuprexit());
             StartCoroutine(ShipAcid());
+            StartCoroutine(ShipElectronics());
         }
 
         private IEnumerator ShipCuprexit()
@@ -37,9 +45,10 @@ namespace OneRoomFactory.Managers
             {
                 if (CuprexitAccepted)
                 {
-                    for (var i = 0; i < CuprexitShipmentSize; i++)
+                    for (var i = 0; i < CuprexitShipmentSize; i = i + 2)
                     {
-                        Instantiate(CuprexitPrefab, CuprexitSpawnPosition.position, Quaternion.identity);
+                        Instantiate(CuprexitPrefab, CuprexitSpawnPosition1.position, Quaternion.identity);
+                        Instantiate(CuprexitPrefab, CuprexitSpawnPosition2.position, Quaternion.identity);
                         yield return new WaitForSeconds(2);
                     }
                 }
@@ -49,7 +58,6 @@ namespace OneRoomFactory.Managers
 
         private IEnumerator ShipAcid()
         {
-            yield return new WaitForSeconds(20);
             while (true)
             {
                 if (AcidAccepted)
@@ -61,6 +69,22 @@ namespace OneRoomFactory.Managers
                     }
                 }
                 yield return new WaitForSeconds(AcidWaitTime);
+            }
+        }
+
+        private IEnumerator ShipElectronics()
+        {
+            while (true)
+            {
+                if (ElectronicsPrefab)
+                {
+                    for (var i = 0; i < ElectronicsShipmentSize; i++)
+                    {
+                        Instantiate(ElectronicsPrefab, ElectronicsSpawnPosition.position, Quaternion.identity);
+                        yield return new WaitForSeconds(2);
+                    }
+                }
+                yield return new WaitForSeconds(ElectronicsWaitTime);
             }
         }
     }

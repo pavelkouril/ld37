@@ -8,6 +8,9 @@ using System;
 namespace OneRoomFactory.Managers
 {
     [RequireComponent(typeof(TileManager))]
+    [RequireComponent(typeof(UIManager))]
+    [RequireComponent(typeof(MoneyManager))]
+    [RequireComponent(typeof(GamestateManager))]
     public class ConstructionManager : MonoBehaviour
     {
         public Transform BlueprintsParent;
@@ -24,6 +27,7 @@ namespace OneRoomFactory.Managers
         private TileManager tileManager;
         private UIManager uiManager;
         private MoneyManager moneyManager;
+        private GamestateManager gamestateManager;
 
         private GameObject modelToPlace;
         private Buildable prefabToPlace;
@@ -46,11 +50,15 @@ namespace OneRoomFactory.Managers
 
         private bool isDestroying = false;
 
+        private bool isGoingToBuildAcidStation = false;
+        private bool isGoingToBuildAssemblyStation = false;
+
         private void Awake()
         {
             tileManager = GetComponent<TileManager>();
             uiManager = GetComponent<UIManager>();
             moneyManager = GetComponent<MoneyManager>();
+            gamestateManager = GetComponent<GamestateManager>();
         }
 
         private void Start()
@@ -120,6 +128,7 @@ namespace OneRoomFactory.Managers
             prefabToPlace = AcidSinkStationPrefab;
             modelToPlace.transform.rotation = Quaternion.identity;
             modelToPlace.SetActive(true);
+            isGoingToBuildAcidStation = true;
         }
 
         public void BuildCleanerButtonClicked()
@@ -147,6 +156,7 @@ namespace OneRoomFactory.Managers
             prefabToPlace = AssemblyStationPrefab;
             modelToPlace.transform.rotation = Quaternion.identity;
             modelToPlace.SetActive(true);
+            isGoingToBuildAssemblyStation = true;
         }
 
         private void ResetConstructionParameters()
@@ -155,6 +165,8 @@ namespace OneRoomFactory.Managers
             tileManager.ShowTiles();
             currentBuildRotation = BuildRotation.Right;
             currentVectorRotation = Vector3.zero;
+            isGoingToBuildAcidStation = false;
+            isGoingToBuildAssemblyStation = false;
         }
 
         public void EnterDestroyMode()
@@ -239,6 +251,14 @@ namespace OneRoomFactory.Managers
             buildable.Rotation = currentBuildRotation;
             tile.Build(buildable);
             moneyManager.Pay(prefabToPlace.Price);
+            if (isGoingToBuildAcidStation)
+            {
+                gamestateManager.StartShippingAcid();
+            }
+            if (isGoingToBuildAssemblyStation)
+            {
+                gamestateManager.StartShippingElectronics();
+            }
         }
 
         private void Clear(Tile tile)

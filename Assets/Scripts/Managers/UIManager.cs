@@ -14,6 +14,8 @@ namespace OneRoomFactory.Managers
         public GameObject PlayGUI;
         public Text TimerText;
         public Text MoneyBalanceText;
+        public GameObject TextBackground;
+        public Text TextMessage;
 
         private bool gamePaused;
 
@@ -91,6 +93,19 @@ namespace OneRoomFactory.Managers
         internal void HideBuildMenu()
         {
             BuildMenu.SetActive(false);
+        }
+
+        public void DisplayText(string text)
+        {
+            TextBackground.SetActive(true);
+            TextMessage.text = text;
+            StartCoroutine(HideTextAfter(5));
+        }
+
+        private IEnumerator HideTextAfter(int seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            TextBackground.SetActive(false);
         }
     }
 }
