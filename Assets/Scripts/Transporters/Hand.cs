@@ -100,7 +100,7 @@ namespace OneRoomFactory.Transporters
             }
             else
             {
-                CalculateAnglesForTransform(ToMove.transform);
+                CalculateAnglesForTransform(Output.transform);
                 //coreTargetAngle = 0.0f;
                 //upperTargetAngle = 0.0f;
                 //lowerTargetAngle = 0.0f;
