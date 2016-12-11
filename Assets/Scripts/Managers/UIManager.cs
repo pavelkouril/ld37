@@ -28,6 +28,12 @@ namespace OneRoomFactory.Managers
             constructionManager = GetComponent<ConstructionManager>();
         }
 
+        private void Start()
+        {
+            PlayGUI.SetActive(false);
+            TextBackground.SetActive(false);
+        }
+
         private void Update()
         {
             if (enableInputs)
