@@ -30,10 +30,5 @@ namespace OneRoomFactory.Factory
             BuiltObject = obj;
             obj.Tile = this;
         }
-
-        private void Start()
-        {
-            GetComponentInChildren<Text>().text = string.Format("[{0}, {1}]", PosX, PosY);
-        }
     }
 }

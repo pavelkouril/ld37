@@ -33,10 +33,6 @@ namespace OneRoomFactory.Factory
                     nextTarget = Vector3.down;
                 }
             }
-            if (moveTarget == Vector3.down && nextTarget == Vector3.down)
-            {
-                rigidbody.isKinematic = false;
-            }
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -47,14 +43,13 @@ namespace OneRoomFactory.Factory
                 if (trans.Type == TransporterType.Belt)
                 {
                     var belt = trans as Belt;
-                    rigidbody.isKinematic = true;
                     if (moveTarget == Vector3.down)
                     {
-                        moveTarget = belt.Tile.transform.position + belt.MoveVector;
+                        moveTarget = belt.GetTransform().position + belt.MoveVector;
                     }
                     else
                     {
-                        nextTarget = belt.Tile.transform.position + belt.MoveVector;
+                        nextTarget = belt.GetTransform().position + belt.MoveVector;
                     }
                 }
             }

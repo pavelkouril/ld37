@@ -32,29 +32,37 @@ namespace OneRoomFactory.Transporters
             { BuildRotation.Left, new Vector3(1, 0, 0) }
         };
 
-        private new Collider collider;
-
-        private void Awake()
-        {
-            collider = GetComponent<Collider>();
-        }
-
         private void Start()
         {
-            switch (Rotation)
+            if (Tile)
             {
-                case BuildRotation.Up:
-                    Output = Tile.NeighbourDown;
-                    break;
-                case BuildRotation.Right:
-                    Output = Tile.NeighbourLeft;
-                    break;
-                case BuildRotation.Down:
-                    Output = Tile.NeighbourUp;
-                    break;
-                case BuildRotation.Left:
-                    Output = Tile.NeighbourRight;
-                    break;
+                switch (Rotation)
+                {
+                    case BuildRotation.Up:
+                        Output = Tile.NeighbourDown;
+                        break;
+                    case BuildRotation.Right:
+                        Output = Tile.NeighbourLeft;
+                        break;
+                    case BuildRotation.Down:
+                        Output = Tile.NeighbourUp;
+                        break;
+                    case BuildRotation.Left:
+                        Output = Tile.NeighbourRight;
+                        break;
+                }
+            }
+        }
+
+        public Transform GetTransform()
+        {
+            if (Tile)
+            {
+                return Tile.transform;
+            }
+            else
+            {
+                return transform;
             }
         }
     }

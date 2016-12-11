@@ -7,8 +7,6 @@ namespace OneRoomFactory.Graphics
     public class BeltRollingAnimator : MonoBehaviour
     {
         private Renderer rend;
-        private static float offset = 0.0f;
-        private static float offsetSpeed = 0.2f;
 
         void Start()
         {

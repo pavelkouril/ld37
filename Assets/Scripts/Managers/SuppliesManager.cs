@@ -10,7 +10,8 @@ namespace OneRoomFactory.Managers
     [RequireComponent(typeof(TileManager))]
     public class SuppliesManager : MonoBehaviour
     {
-        public Belt BeltPrefab;
+        public Transform AcidSpawnPosition;
+        public Transform CuprexitSpawnPosition;
 
         public Movable CuprexitPrefab;
         public Movable AcidPrefab;
@@ -23,34 +24,8 @@ namespace OneRoomFactory.Managers
         public int AcidWaitTime;
         public bool AcidAccepted;
 
-        private TileManager tileManager;
-
-        private Belt cuprexitBelt;
-        private Belt acidBelt;
-        private Belt electronicsBelt;
-
-        private void Awake()
-        {
-            tileManager = GetComponent<TileManager>();
-        }
-
         private void Start()
         {
-            var tile = tileManager.Tiles[9, 3];
-            cuprexitBelt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.identity) as Belt;
-            cuprexitBelt.Rotation = BuildRotation.Right;
-            tile.Build(cuprexitBelt);
-
-            tile = tileManager.Tiles[9, 4];
-            acidBelt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.identity) as Belt;
-            acidBelt.Rotation = BuildRotation.Right;
-            tile.Build(acidBelt);
-
-            tile = tileManager.Tiles[9, 5];
-            electronicsBelt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.identity) as Belt;
-            electronicsBelt.Rotation = BuildRotation.Right;
-            tile.Build(electronicsBelt);
-
             StartCoroutine(ShipCuprexit());
             StartCoroutine(ShipAcid());
         }
@@ -64,7 +39,7 @@ namespace OneRoomFactory.Managers
                 {
                     for (var i = 0; i < CuprexitShipmentSize; i++)
                     {
-                        var supply = Instantiate(CuprexitPrefab, cuprexitBelt.InputCenter.position + new Vector3(0, 0, -0.25f), Quaternion.identity) as Movable;
+                        Instantiate(CuprexitPrefab, CuprexitSpawnPosition.position, Quaternion.identity);
                         yield return new WaitForSeconds(2);
                     }
                 }
@@ -81,7 +56,7 @@ namespace OneRoomFactory.Managers
                 {
                     for (var i = 0; i < AcidShipmentSize; i++)
                     {
-                        var supply = Instantiate(AcidPrefab, acidBelt.InputCenter.position, Quaternion.identity) as Movable;
+                        Instantiate(AcidPrefab, AcidSpawnPosition.position, Quaternion.identity);
                         yield return new WaitForSeconds(2);
                     }
                 }
