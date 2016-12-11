@@ -16,6 +16,7 @@ namespace OneRoomFactory.Managers
         public GameObject UVStationPrefab;
 
         private TileManager tileManager;
+        private UIManager uiManager;
 
         private GameObject modelToPlace;
         private GameObject prefabToPlace;
@@ -36,6 +37,7 @@ namespace OneRoomFactory.Managers
         private void Awake()
         {
             tileManager = GetComponent<TileManager>();
+            uiManager = GetComponent<UIManager>();
         }
 
         private void Start()
@@ -54,42 +56,65 @@ namespace OneRoomFactory.Managers
             uvStationModel.SetActive(false);
         }
 
+        public void BuildBeltButtonClicked()
+        {
+            currentBuildRotation = BuildRotation.Right;
+            currentVectorRotation = Vector3.zero;
+            modelToPlace = beltModel;
+            prefabToPlace = BeltPrefab;
+            modelToPlace.transform.rotation = Quaternion.identity;
+            modelToPlace.SetActive(true);
+            tileManager.ShowTiles();
+            uiManager.HideBuildMenu();
+        }
+
+        public void BuildHandButtonClicked()
+        {
+            currentBuildRotation = BuildRotation.Right;
+            currentVectorRotation = Vector3.zero;
+            modelToPlace = robotHandModel;
+            prefabToPlace = RobotHandPrefab;
+            modelToPlace.transform.rotation = robotHandModelRot;
+            modelToPlace.SetActive(true);
+            tileManager.ShowTiles();
+            canRotate = false;
+            uiManager.HideBuildMenu();
+        }
+
+        public void BuildUVStationButtonClicked()
+        {
+            currentBuildRotation = BuildRotation.Right;
+            currentVectorRotation = Vector3.zero;
+            modelToPlace = uvStationModel;
+            prefabToPlace = UVStationPrefab;
+            modelToPlace.transform.rotation = Quaternion.identity;
+            modelToPlace.SetActive(true);
+            tileManager.ShowTiles();
+            uiManager.HideBuildMenu();
+        }
+
+        public void BuildAcidSinkButtonClicked()
+        {
+
+        }
+
+        public void BuildCleanerButtonClicked()
+        {
+
+        }
+
+        public void BuildDrillerButtonClicked()
+        {
+
+        }
+
+        public void BuildAssemblerButtonClicked()
+        {
+
+        }
+
         private void Update()
         {
-            if (modelToPlace == null && Input.GetKeyDown(KeyCode.B))
-            {
-                currentBuildRotation = BuildRotation.Right;
-                currentVectorRotation = Vector3.zero;
-                modelToPlace = beltModel;
-                prefabToPlace = BeltPrefab;
-                modelToPlace.transform.rotation = Quaternion.identity;
-                modelToPlace.SetActive(true);
-                tileManager.ShowTiles();
-            }
-
-            if (modelToPlace == null && Input.GetKeyDown(KeyCode.V))
-            {
-                currentBuildRotation = BuildRotation.Right;
-                currentVectorRotation = Vector3.zero;
-                modelToPlace = uvStationModel;
-                prefabToPlace = UVStationPrefab;
-                modelToPlace.transform.rotation = Quaternion.identity;
-                modelToPlace.SetActive(true);
-                tileManager.ShowTiles();
-            }
-
-            if (modelToPlace == null && Input.GetKeyDown(KeyCode.N))
-            {
-                currentBuildRotation = BuildRotation.Right;
-                currentVectorRotation = Vector3.zero;
-                modelToPlace = robotHandModel;
-                prefabToPlace = RobotHandPrefab;
-                modelToPlace.transform.rotation = robotHandModelRot;
-                modelToPlace.SetActive(true);
-                tileManager.ShowTiles();
-                canRotate = false;
-            }
-
             if (modelToPlace == null && Input.GetKeyDown(KeyCode.D))
             {
                 tileManager.ShowTiles();
@@ -172,10 +197,13 @@ namespace OneRoomFactory.Managers
             tile.Clear();
         }
 
-        private void HideBuildingMode()
+        public void HideBuildingMode()
         {
             tileManager.HideTiles();
-            modelToPlace.SetActive(false);
+            if (modelToPlace != null)
+            {
+                modelToPlace.SetActive(false);
+            }
             modelToPlace = null;
             prefabToPlace = null;
             canRotate = true;
