@@ -12,7 +12,14 @@ namespace OneRoomFactory.Managers
     {
         public Belt BeltPrefab;
 
-        public Movable SupplyPrefab;
+        public Movable CuprexitPrefab;
+        public Movable AcidPrefab;
+
+        public int CuprexitShipmentSize;
+        public int CuprexitWaitTime;
+
+        public int AcidShipmentSize;
+        public int AcidWaitTime;
 
         private TileManager tileManager;
 
@@ -37,32 +44,43 @@ namespace OneRoomFactory.Managers
             acidBelt.Rotation = BuildRotation.Right;
             tile.Build(acidBelt);
 
-            tile = tileManager.Tiles[8, 4];
-            var belt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.identity) as Belt;
-            belt.Rotation = BuildRotation.Right;
-            tile.Build(belt);
-
-            tile = tileManager.Tiles[7, 4];
-            belt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.identity) as Belt;
-            belt.Rotation = BuildRotation.Right;
-            tile.Build(belt);
-
             tile = tileManager.Tiles[9, 5];
             electronicsBelt = Instantiate(BeltPrefab, tile.transform.position, Quaternion.identity) as Belt;
             electronicsBelt.Rotation = BuildRotation.Right;
             tile.Build(electronicsBelt);
 
-            StartCoroutine(ShipSupplies());
+            StartCoroutine(ShipCuprexit());
+            StartCoroutine(ShipAcid());
         }
 
-        private IEnumerator ShipSupplies()
+        private IEnumerator ShipCuprexit()
         {
             yield return new WaitForSeconds(5);
             while (true)
             {
-                var supply = Instantiate(SupplyPrefab, acidBelt.InputCenter.position + Vector3.up + new Vector3(0, 0, -0.25f), Quaternion.identity) as Movable;
-                yield return new WaitForSeconds(10);
+                for (var i = 0; i < CuprexitShipmentSize; i++)
+                {
+                    var supply = Instantiate(CuprexitPrefab, cuprexitBelt.InputCenter.position + new Vector3(0, 0, -0.25f), Quaternion.identity) as Movable;
+                    yield return new WaitForSeconds(2);
+                }
+                yield return new WaitForSeconds(CuprexitWaitTime);
             }
         }
+
+        private IEnumerator ShipAcid()
+        {
+            yield return new WaitForSeconds(5);
+            while (true)
+            {
+                for (var i = 0; i < AcidShipmentSize; i++)
+                {
+                    var supply = Instantiate(AcidPrefab, acidBelt.InputCenter.position, Quaternion.identity) as Movable;
+                    yield return new WaitForSeconds(2);
+                }
+                yield return new WaitForSeconds(AcidWaitTime);
+            }
+        }
+
+
     }
 }
