@@ -17,9 +17,11 @@ namespace OneRoomFactory.Managers
 
         public int CuprexitShipmentSize;
         public int CuprexitWaitTime;
+        public bool CuprexitAccepted;
 
         public int AcidShipmentSize;
         public int AcidWaitTime;
+        public bool AcidAccepted;
 
         private TileManager tileManager;
 
@@ -58,10 +60,13 @@ namespace OneRoomFactory.Managers
             yield return new WaitForSeconds(5);
             while (true)
             {
-                for (var i = 0; i < CuprexitShipmentSize; i++)
+                if (CuprexitAccepted)
                 {
-                    var supply = Instantiate(CuprexitPrefab, cuprexitBelt.InputCenter.position + new Vector3(0, 0, -0.25f), Quaternion.identity) as Movable;
-                    yield return new WaitForSeconds(2);
+                    for (var i = 0; i < CuprexitShipmentSize; i++)
+                    {
+                        var supply = Instantiate(CuprexitPrefab, cuprexitBelt.InputCenter.position + new Vector3(0, 0, -0.25f), Quaternion.identity) as Movable;
+                        yield return new WaitForSeconds(2);
+                    }
                 }
                 yield return new WaitForSeconds(CuprexitWaitTime);
             }
@@ -72,15 +77,16 @@ namespace OneRoomFactory.Managers
             yield return new WaitForSeconds(5);
             while (true)
             {
-                for (var i = 0; i < AcidShipmentSize; i++)
+                if (AcidAccepted)
                 {
-                    var supply = Instantiate(AcidPrefab, acidBelt.InputCenter.position, Quaternion.identity) as Movable;
-                    yield return new WaitForSeconds(2);
+                    for (var i = 0; i < AcidShipmentSize; i++)
+                    {
+                        var supply = Instantiate(AcidPrefab, acidBelt.InputCenter.position, Quaternion.identity) as Movable;
+                        yield return new WaitForSeconds(2);
+                    }
                 }
                 yield return new WaitForSeconds(AcidWaitTime);
             }
         }
-
-
     }
 }

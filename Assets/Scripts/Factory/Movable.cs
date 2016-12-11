@@ -11,5 +11,53 @@ namespace OneRoomFactory.Factory
         public MovableType Type;
         public int Units = 1;
         public ITransporter TransportedBy;
+
+        private Vector3 moveTarget = Vector3.down; //magical values that cant be reached normally by our game, Vector3 isn nullable :(
+        private Vector3 nextTarget = Vector3.down; //magical values that cant be reached normally by our game, Vector3 isn nullable :(
+
+        private new Rigidbody rigidbody;
+
+        private void Awake()
+        {
+            rigidbody = GetComponent<Rigidbody>();
+        }
+
+        private void FixedUpdate()
+        {
+            if (moveTarget != Vector3.down)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, moveTarget, Time.fixedDeltaTime);
+                if (Vector3.Distance(transform.position, moveTarget) < 0.5f)
+                {
+                    moveTarget = nextTarget;
+                    nextTarget = Vector3.down;
+                }
+            }
+            if (moveTarget == Vector3.down && nextTarget == Vector3.down)
+            {
+                rigidbody.isKinematic = false;
+            }
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.collider.CompareTag("Transporter"))
+            {
+                var trans = collision.collider.GetComponent<ITransporter>();
+                if (trans.Type == TransporterType.Belt)
+                {
+                    var belt = trans as Belt;
+                    rigidbody.isKinematic = true;
+                    if (moveTarget == Vector3.down)
+                    {
+                        moveTarget = belt.Tile.transform.position + belt.MoveVector;
+                    }
+                    else
+                    {
+                        nextTarget = belt.Tile.transform.position + belt.MoveVector;
+                    }
+                }
+            }
+        }
     }
 }

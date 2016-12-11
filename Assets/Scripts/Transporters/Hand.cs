@@ -15,6 +15,8 @@ namespace OneRoomFactory.Transporters
         public Transform target;
         private Transform grabbedObject;
 
+        public TransporterType Type { get { return TransporterType.Hand; } }
+
         public enum State
         {
             STATE_DEFAULT,

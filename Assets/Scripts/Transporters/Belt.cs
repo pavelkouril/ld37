@@ -20,7 +20,17 @@ namespace OneRoomFactory.Transporters
 
         public Movable ToMove { get; set; }
 
-        private Vector3 MoveVector = new Vector3(0, 0);
+        public TransporterType Type { get { return TransporterType.Belt; } }
+
+        public Vector3 MoveVector { get { return moveVectors[Rotation]; } }
+
+        private Dictionary<BuildRotation, Vector3> moveVectors = new Dictionary<BuildRotation, Vector3>()
+        {
+            { BuildRotation.Up, new Vector3(0, 0, 1) },
+            { BuildRotation.Right, new Vector3(-1, 0, 0) },
+            { BuildRotation.Down, new Vector3(0, 0, -1) },
+            { BuildRotation.Left, new Vector3(1, 0, 0) }
+        };
 
         private new Collider collider;
 
@@ -35,57 +45,16 @@ namespace OneRoomFactory.Transporters
             {
                 case BuildRotation.Up:
                     Output = Tile.NeighbourDown;
-                    MoveVector = new Vector3(0, 0, +1);
                     break;
                 case BuildRotation.Right:
                     Output = Tile.NeighbourLeft;
-                    MoveVector = new Vector3(-1, 0, 0);
                     break;
                 case BuildRotation.Down:
                     Output = Tile.NeighbourUp;
-                    MoveVector = new Vector3(0, 0, -1);
                     break;
                 case BuildRotation.Left:
                     Output = Tile.NeighbourRight;
-                    MoveVector = new Vector3(1, 0, 0);
                     break;
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            if (ToMove != null && ToMove.TransportedBy == this)
-            {
-                ToMove.transform.position += MoveVector * Time.fixedDeltaTime;
-            }
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Movable"))
-            {
-                var movable = other.GetComponent<Movable>();
-                ToMove = movable;
-                if (ToMove.TransportedBy != this)
-                {
-                    ToMove.TransportedBy = this;
-                }
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.CompareTag("Movable"))
-            {
-                if (Output)
-                {
-                    var objectOnNextTile = Output.BuiltObject as Belt;
-                    if (objectOnNextTile != null && objectOnNextTile.Rotation != Rotation)
-                    {
-                        ToMove.transform.position = objectOnNextTile.InputCenter.position;
-                    }
-                }
-                ToMove = null;
             }
         }
     }
