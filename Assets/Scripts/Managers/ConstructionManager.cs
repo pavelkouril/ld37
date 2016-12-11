@@ -10,11 +10,16 @@ namespace OneRoomFactory.Managers
     [RequireComponent(typeof(TileManager))]
     public class ConstructionManager : MonoBehaviour
     {
+        public Transform BlueprintsParent;
         public LayerMask TileLayer;
 
         public Buildable BeltPrefab;
         public Buildable RobotHandPrefab;
         public Buildable UVStationPrefab;
+        public Buildable AcidSinkStationPrefab;
+        public Buildable CleaningStationPrefab;
+        public Buildable DrillingStationPrefab;
+        public Buildable AssemblyStationPrefab;
 
         private TileManager tileManager;
         private UIManager uiManager;
@@ -24,8 +29,12 @@ namespace OneRoomFactory.Managers
         private Buildable prefabToPlace;
 
         private GameObject beltModel;
-        private GameObject uvStationModel;
         private GameObject robotHandModel;
+        private GameObject uvStationModel;
+        private GameObject acidSinkStationModel;
+        private GameObject cleaningStationModel;
+        private GameObject drillingStationModel;
+        private GameObject assemblyStationModel;
 
         private BuildRotation currentBuildRotation = BuildRotation.Right;
         private Vector3 currentVectorRotation = Vector3.zero;
@@ -47,17 +56,33 @@ namespace OneRoomFactory.Managers
         private void Start()
         {
             var beltModelGo = BeltPrefab.GetComponentInChildren<MeshRenderer>().gameObject;
-            beltModel = Instantiate(beltModelGo, beltModelGo.transform.position, Quaternion.identity);
+            beltModel = Instantiate(beltModelGo, beltModelGo.transform.position, Quaternion.identity, BlueprintsParent);
             beltModel.SetActive(false);
 
             var robotHandModelGo = RobotHandPrefab.GetComponentInChildren<MeshRenderer>().gameObject;
             robotHandModelRot = robotHandModelGo.transform.rotation;
-            robotHandModel = Instantiate(robotHandModelGo, robotHandModelGo.transform.position, robotHandModelRot);
+            robotHandModel = Instantiate(robotHandModelGo, robotHandModelGo.transform.position, robotHandModelRot, BlueprintsParent);
             robotHandModel.SetActive(false);
 
             var uvStationModelGo = UVStationPrefab.GetComponentInChildren<MeshRenderer>().gameObject;
-            uvStationModel = Instantiate(uvStationModelGo, uvStationModelGo.transform.position, Quaternion.identity);
+            uvStationModel = Instantiate(uvStationModelGo, uvStationModelGo.transform.position, Quaternion.identity, BlueprintsParent);
             uvStationModel.SetActive(false);
+
+            var acidSinkStationModelGo = AcidSinkStationPrefab.GetComponentInChildren<MeshRenderer>().gameObject;
+            acidSinkStationModel = Instantiate(acidSinkStationModelGo, uvStationModelGo.transform.position, Quaternion.identity, BlueprintsParent);
+            acidSinkStationModel.SetActive(false);
+
+            var cleaningStationModelGo = CleaningStationPrefab.GetComponentInChildren<MeshRenderer>().gameObject;
+            cleaningStationModel = Instantiate(cleaningStationModelGo, uvStationModelGo.transform.position, Quaternion.identity, BlueprintsParent);
+            cleaningStationModel.SetActive(false);
+
+            var drillingStationModelGo = DrillingStationPrefab.GetComponentInChildren<MeshRenderer>().gameObject;
+            drillingStationModel = Instantiate(drillingStationModelGo, uvStationModelGo.transform.position, Quaternion.identity, BlueprintsParent);
+            drillingStationModel.SetActive(false);
+
+            var assemblyStationModelGo = AssemblyStationPrefab.GetComponentInChildren<MeshRenderer>().gameObject;
+            assemblyStationModel = Instantiate(assemblyStationModelGo, uvStationModelGo.transform.position, Quaternion.identity, BlueprintsParent);
+            assemblyStationModel.SetActive(false);
         }
 
         public void BuildBeltButtonClicked()
@@ -90,22 +115,38 @@ namespace OneRoomFactory.Managers
 
         public void BuildAcidSinkButtonClicked()
         {
-
+            ResetConstructionParameters();
+            modelToPlace = acidSinkStationModel;
+            prefabToPlace = AcidSinkStationPrefab;
+            modelToPlace.transform.rotation = Quaternion.identity;
+            modelToPlace.SetActive(true);
         }
 
         public void BuildCleanerButtonClicked()
         {
-
+            ResetConstructionParameters();
+            modelToPlace = cleaningStationModel;
+            prefabToPlace = CleaningStationPrefab;
+            modelToPlace.transform.rotation = Quaternion.identity;
+            modelToPlace.SetActive(true);
         }
 
         public void BuildDrillerButtonClicked()
         {
-
+            ResetConstructionParameters();
+            modelToPlace = drillingStationModel;
+            prefabToPlace = DrillingStationPrefab;
+            modelToPlace.transform.rotation = Quaternion.identity;
+            modelToPlace.SetActive(true);
         }
 
         public void BuildAssemblerButtonClicked()
         {
-
+            ResetConstructionParameters();
+            modelToPlace = assemblyStationModel;
+            prefabToPlace = AssemblyStationPrefab;
+            modelToPlace.transform.rotation = Quaternion.identity;
+            modelToPlace.SetActive(true);
         }
 
         private void ResetConstructionParameters()
