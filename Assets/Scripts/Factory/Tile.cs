@@ -27,7 +27,7 @@ namespace OneRoomFactory.Factory
         public Material CurrentMaterial { get { return renderer.material; } set { renderer.material = value; } }
 
         public Material DefaultMaterial;
-        public Material ToClearMaterial;
+        public Material HoverMaterial;
 
         private new Renderer renderer;
 
@@ -52,6 +52,16 @@ namespace OneRoomFactory.Factory
                 BuiltObject = null;
                 IsFree = true;
             }
+        }
+
+        private void OnMouseEnter()
+        {
+            CurrentMaterial = HoverMaterial;
+        }
+
+        private void OnMouseExit()
+        {
+            CurrentMaterial = DefaultMaterial;
         }
     }
 }

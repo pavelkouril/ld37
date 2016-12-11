@@ -148,7 +148,6 @@ namespace OneRoomFactory.Managers
                         var tile = hit.collider.gameObject.GetComponent<Tile>();
                         if (tile.BuiltObject != null)
                         {
-                            tile.CurrentMaterial = tile.ToClearMaterial;
                             if (Input.GetMouseButton(0))
                             {
                                 Clear(tile);
