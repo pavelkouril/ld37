@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace OneRoomFactory.Managers
 {
@@ -13,11 +14,15 @@ namespace OneRoomFactory.Managers
 
         private UIManager uiManager;
         private SuppliesManager suppliesManager;
+        private HighScoresManager hsManager;
+        private MoneyManager moneyManager;
 
         private void Awake()
         {
             uiManager = GetComponent<UIManager>();
             suppliesManager = GetComponent<SuppliesManager>();
+            hsManager = GetComponent<HighScoresManager>();
+            moneyManager = GetComponent<MoneyManager>();
         }
 
         private void Start()
@@ -38,17 +43,17 @@ namespace OneRoomFactory.Managers
         private IEnumerator ShowBasicInfo()
         {
             yield return new WaitForSeconds(2);
-            uiManager.DisplayText("Hello! Welcome! How are you?", 4);
+            uiManager.DisplayText("Hello! Welcome! How are you? You have recently acquired this empty factory.", 4);
             yield return new WaitForSeconds(6);
-            uiManager.DisplayText("You have recently acquired this empty factory.", 4);
-            yield return new WaitForSeconds(6);
-            uiManager.DisplayText("The market is booming for custom PCBs, so you want to make them too!", 5);
+            uiManager.DisplayText("The market is booming for custom PCBs, so you want to make them too!", 4);
             yield return new WaitForSeconds(6);
             uiManager.DisplayText("You will need to transform supplies by <b>Belts</b> and <b>Hands</b> to Stations.", 5);
             yield return new WaitForSeconds(6);
             uiManager.DisplayText("First you need to transfer <b>Cuprexit</b> to <b>UV Station</b>.", 5);
             yield return new WaitForSeconds(6);
-            uiManager.DisplayText("Press <b>B</b> or click on the <b>Build</b> icon to open <b>Buy menu</b>.", 5);
+            uiManager.DisplayText("Each Station need intermediate product from previous Station (and sometimes other supplies).", 5);
+            yield return new WaitForSeconds(6);
+            uiManager.DisplayText("Press <b>B</b> or click on the <b>Build</b> icon to open <b>Buy menu</b> and play!.", 5);
             yield return new WaitForSeconds(6);
             uiManager.EnablePlaying();
         }
@@ -59,29 +64,44 @@ namespace OneRoomFactory.Managers
             {
                 RemaningTimeInSeconds--;
                 uiManager.UpdateTimer(TimeSpan.FromSeconds(RemaningTimeInSeconds));
+                if (RemaningTimeInSeconds == 0)
+                {
+                    hsManager.WriteHighScore(moneyManager.Balance);
+                    SceneManager.LoadScene(2);
+                    yield break;
+                }
                 yield return new WaitForSeconds(1);
             }
         }
 
         internal void StartShippingAcid()
         {
-            suppliesManager.AcidAccepted = true;
-            StartCoroutine(suppliesManager.ShipAcid());
-            uiManager.DisplayText("You will now also recieve <b>Acid</b>, needed in <b>Acid Sink Station</b> to process your boards!", 5);
+            if (!suppliesManager.AcidAccepted)
+            {
+                suppliesManager.AcidAccepted = true;
+                StartCoroutine(suppliesManager.ShipAcid());
+                uiManager.DisplayText("You will now also recieve <b>Acid</b>, needed in <b>Acid Sink Station</b> to process your boards!", 5);
+            }
         }
 
         internal void StartShippingElectronics()
         {
-            suppliesManager.ElectronicsAccepted = true;
-            StartCoroutine(suppliesManager.ShipElectronics());
-            uiManager.DisplayText("You will now also recieve <b>Electronics</b>, needed in <b>Assembly Station</b> to complete your PCB! ", 5);
+            if (!suppliesManager.ElectronicsAccepted)
+            {
+                suppliesManager.ElectronicsAccepted = true;
+                StartCoroutine(suppliesManager.ShipElectronics());
+                uiManager.DisplayText("You will now also recieve <b>Electronics</b>, needed in <b>Assembly Station</b> to complete your PCB! ", 5);
+            }
         }
 
         internal void StartShippingCuprexit()
         {
-            suppliesManager.CuprexitAccepted = true;
-            StartCoroutine(suppliesManager.ShipCuprexit());
-            uiManager.DisplayText("Be ready for your first shipment of <b>Cuprexit</b>.", 5);
+            if (!suppliesManager.CuprexitAccepted)
+            {
+                suppliesManager.CuprexitAccepted = true;
+                StartCoroutine(suppliesManager.ShipCuprexit());
+                uiManager.DisplayText("Be ready for your first shipment of <b>Cuprexit</b>.", 5);
+            }
         }
     }
 }

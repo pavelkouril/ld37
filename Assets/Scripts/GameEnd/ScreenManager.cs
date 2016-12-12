@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace OneRoomFactory.GameEnd
@@ -25,6 +26,14 @@ namespace OneRoomFactory.GameEnd
                 str += p.Key.ToString("yyyy-MM-dd HH:mm") + "          " + p.Value + "\n";
             }
             HighScoreTable.text = str;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene(0);
+            }
         }
     }
 }
