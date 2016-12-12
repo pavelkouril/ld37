@@ -60,7 +60,7 @@ namespace OneRoomFactory.Managers
             Tiles[18, 18].IsFree = false;
         }
 
-        private void Update()
+         private void Update()
         {
             if (selectingForHand != null && Input.GetMouseButton(1))
             {
@@ -96,6 +96,13 @@ namespace OneRoomFactory.Managers
         public void ShowTiles()
         {
             TilesParent.gameObject.SetActive(true);
+            for (var i = 0; i < Size; i++)
+            {
+                for (var j = 0; j < Size; j++)
+                {
+                    Tiles[i, j].ResetMaterial();
+                }
+            }
         }
 
         public void HideTiles()

@@ -33,7 +33,7 @@ namespace OneRoomFactory.Factory
 
         private void Awake()
         {
-            renderer = GetComponent<MeshRenderer>();
+            renderer = GetComponent<Renderer>();
             CurrentMaterial = DefaultMaterial;
         }
 
@@ -60,6 +60,11 @@ namespace OneRoomFactory.Factory
         }
 
         private void OnMouseExit()
+        {
+            CurrentMaterial = DefaultMaterial;
+        }
+
+        internal void ResetMaterial()
         {
             CurrentMaterial = DefaultMaterial;
         }
