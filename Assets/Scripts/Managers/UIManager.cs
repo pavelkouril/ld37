@@ -29,6 +29,14 @@ namespace OneRoomFactory.Managers
         private ConstructionManager constructionManager;
         private MoneyManager moneyManager;
 
+        public bool HasMenuOpen
+        {
+            get
+            {
+                return PauseMenu.activeSelf == true || BuildMenu.activeSelf == true || HandMenu.activeSelf == true;
+            }
+        }
+
         private void Awake()
         {
             constructionManager = GetComponent<ConstructionManager>();
@@ -47,6 +55,14 @@ namespace OneRoomFactory.Managers
                 if (Input.GetKeyDown(KeyCode.B) && !gamePaused)
                 {
                     ShowBuildMenu();
+                }
+
+                if (Input.GetMouseButton(1) && HasMenuOpen)
+                {
+                    HandMenu.SetActive(false);
+                    BuildMenu.SetActive(false);
+                    PauseMenu.SetActive(false);
+                    PlayGUI.SetActive(true);
                 }
 
                 if (Input.GetKeyDown(KeyCode.Escape))

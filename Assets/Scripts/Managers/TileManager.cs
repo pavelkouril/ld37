@@ -16,6 +16,7 @@ namespace OneRoomFactory.Managers
 
         public Tile[,] Tiles { get; private set; }
         public UIManager UIManager { get; private set; }
+        public bool ChoosingTile { get { return selectingForHand != null; } }
 
         private ConstructionManager constructionManager;
 

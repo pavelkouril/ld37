@@ -207,7 +207,10 @@ namespace OneRoomFactory.Transporters
 
         private void OnMouseDown()
         {
-            Tile.TileManager.UIManager.ShowHandPanel(this);
+            if (!Tile.TileManager.UIManager.HasMenuOpen)
+            {
+                Tile.TileManager.UIManager.ShowHandPanel(this);
+            }
         }
     }
 }
