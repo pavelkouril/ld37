@@ -202,7 +202,7 @@ namespace OneRoomFactory.Managers
             if (isFirstBuild)
             {
                 isFirstBuild = false;
-                uiManager.DisplayText("You need to place machines on the tiles. Rotation matters, so press <b>R</b> to <b>rotate the objects</b>. If you do a mistake, press <b>D</b> to <b>enter destroy mode</b>.", 6);
+                uiManager.DisplayText("You need to place machines on the tiles. Rotation matters, so press <b>R</b> to <b>rotate the objects</b>. If you do a mistake, press <b>F</b> to <b>enter destroy mode</b>.", 6);
             }
             uiManager.HideBuildMenu();
             tileManager.ShowTiles();
@@ -222,7 +222,7 @@ namespace OneRoomFactory.Managers
 
         private void Update()
         {
-            if (modelToPlace == null && Input.GetKeyDown(KeyCode.D))
+            if (modelToPlace == null && Input.GetKeyDown(KeyCode.F))
             {
                 EnterDestroyMode();
             }
