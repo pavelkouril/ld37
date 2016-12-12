@@ -53,6 +53,7 @@ namespace OneRoomFactory.Managers
         private bool isGoingToBuildAcidStation = false;
         private bool isGoingToBuildAssemblyStation = false;
         private bool isGoingToBuildUVStation = false;
+        private bool isGoingToBuildHand = false;
 
         private bool isFirstBuild = true;
 
@@ -147,6 +148,7 @@ namespace OneRoomFactory.Managers
             modelToPlace.transform.rotation = Quaternion.identity;
             modelToPlace.gameObject.SetActive(true);
             canRotate = false;
+            isGoingToBuildHand = true;
         }
 
         public void BuildUVStationButtonClicked()
@@ -211,6 +213,7 @@ namespace OneRoomFactory.Managers
             isGoingToBuildAcidStation = false;
             isGoingToBuildAssemblyStation = false;
             isGoingToBuildUVStation = false;
+            isGoingToBuildHand = false;
         }
 
         public void EnterDestroyMode()
@@ -295,6 +298,10 @@ namespace OneRoomFactory.Managers
             buildable.Rotation = currentBuildRotation;
             tile.Build(buildable);
             moneyManager.Pay(prefabToPlace.Price);
+            if (isGoingToBuildUVStation)
+            {
+                gamestateManager.StartShippingCuprexit();
+            }
             if (isGoingToBuildAcidStation)
             {
                 gamestateManager.StartShippingAcid();
@@ -303,9 +310,9 @@ namespace OneRoomFactory.Managers
             {
                 gamestateManager.StartShippingElectronics();
             }
-            if (isGoingToBuildUVStation)
+            if (isGoingToBuildHand)
             {
-                gamestateManager.StartShippingCuprexit();
+                gamestateManager.ShowHandTutorial();
             }
         }
 

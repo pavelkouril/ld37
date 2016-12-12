@@ -17,6 +17,8 @@ namespace OneRoomFactory.Managers
         private HighScoresManager hsManager;
         private MoneyManager moneyManager;
 
+        private bool hasHand;
+
         private void Awake()
         {
             uiManager = GetComponent<UIManager>();
@@ -51,9 +53,9 @@ namespace OneRoomFactory.Managers
             yield return new WaitForSeconds(6);
             uiManager.DisplayText("First you need to transfer <b>Cuprexit</b> to <b>UV Station</b>.", 5);
             yield return new WaitForSeconds(6);
-            uiManager.DisplayText("Each Station need intermediate product from previous Station (and sometimes other supplies).", 5);
+            uiManager.DisplayText("Each Station need intermediate product from previous Station (and sometimes other supplies). Stations are numbered from 01 to 05.", 5);
             yield return new WaitForSeconds(6);
-            uiManager.DisplayText("Press <b>B</b> or click on the <b>Build</b> icon to open <b>Buy menu</b> and play!.", 5);
+            uiManager.DisplayText("Press <b>B</b> or click on the <b>Build</b> icon to open <b>Build menu</b> and play!.", 5);
             yield return new WaitForSeconds(6);
             uiManager.EnablePlaying();
         }
@@ -101,6 +103,15 @@ namespace OneRoomFactory.Managers
                 suppliesManager.CuprexitAccepted = true;
                 StartCoroutine(suppliesManager.ShipCuprexit());
                 uiManager.DisplayText("Be ready for your first shipment of <b>Cuprexit</b>.", 5);
+            }
+        }
+
+        internal void ShowHandTutorial()
+        {
+            if (!hasHand)
+            {
+                hasHand = true;
+                uiManager.DisplayText("You need to configure your Hand. Click on it to select <b>Target tile</b> and what <b>supply type it moves</b>!", 6);
             }
         }
     }
