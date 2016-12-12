@@ -173,6 +173,8 @@ namespace OneRoomFactory.Transporters
                                 grabbedObject.GetComponent<Rigidbody>().isKinematic = false;
                                 grabbedObject.GetComponent<Rigidbody>().useGravity = true;
                                 grabbedObject.GetComponent<Movable>().isGrabbed = false;
+                                grabbedObject.transform.position = Output.transform.position + new Vector3(0.0f, 0.2f, 0.0f);
+                                grabbedObject.rotation = Quaternion.identity;
                                 grabbedObject.transform.parent = null;
                                 grabbedObject = null;
                             }
