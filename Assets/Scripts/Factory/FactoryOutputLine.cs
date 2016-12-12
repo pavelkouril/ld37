@@ -1,16 +1,25 @@
-﻿using System.Collections;
+﻿using OneRoomFactory.Managers;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FactoryOutputLine : MonoBehaviour {
+namespace OneRoomFactory.Factory
+{
+    public class FactoryOutputLine : MonoBehaviour
+    {
+        public MoneyManager MoneyManager;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Movable"))
+            {
+                if (other.GetComponent<Movable>().Type == MovableType.CompletedPCB)
+                {
+                    MoneyManager.Recieve(250);
+                }
+
+                Destroy(other.gameObject);
+            }
+        }
+    }
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace OneRoomFactory.Factory
 {
@@ -54,6 +55,12 @@ namespace OneRoomFactory.Factory
                     }
                 }
             }
+        }
+
+        internal void ResetMove()
+        {
+            moveTarget = Vector3.down;
+            nextTarget = Vector3.down;
         }
     }
 }

@@ -153,6 +153,7 @@ namespace OneRoomFactory.Transporters
                                 ToMove.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
                                 ToMove.transform.localRotation = Quaternion.AngleAxis(0.0f, new Vector3(0.0f, 1.0f, 0.0f));
                                 ToMove.GetComponent<Rigidbody>().isKinematic = true;
+                                ToMove.ResetMove();
                                 ToMove.GetComponent<Rigidbody>().useGravity = false;
                                 ToMove.isGrabbed = true;
                                 grabbedObject = ToMove.transform;
