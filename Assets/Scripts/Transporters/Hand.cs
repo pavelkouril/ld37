@@ -122,6 +122,7 @@ namespace OneRoomFactory.Transporters
             {
                 ToMove = null;
                 lastMoved = null;
+                state = State.STATE_HOMECOMING;
             }
             else
             {
