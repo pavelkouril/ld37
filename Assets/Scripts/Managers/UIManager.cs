@@ -103,10 +103,6 @@ namespace OneRoomFactory.Managers
             SceneManager.LoadScene(0);
         }
 
-        public void QuitToDesktop()
-        {
-        }
-
         public void RestartGame()
         {
             SceneManager.LoadScene(1);
