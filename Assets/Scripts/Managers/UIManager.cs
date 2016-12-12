@@ -5,6 +5,7 @@ using OneRoomFactory.Transporters;
 using UnityEngine;
 using UnityEngine.UI;
 using OneRoomFactory.Factory;
+using UnityEngine.SceneManagement;
 
 namespace OneRoomFactory.Managers
 {
@@ -99,11 +100,16 @@ namespace OneRoomFactory.Managers
 
         public void QuitToMenu()
         {
+            SceneManager.LoadScene(0);
         }
 
         public void QuitToDesktop()
         {
+        }
 
+        public void RestartGame()
+        {
+            SceneManager.LoadScene(1);
         }
 
         public void ShowBuildMenu()
