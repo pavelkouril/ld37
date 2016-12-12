@@ -60,7 +60,7 @@ namespace OneRoomFactory.Managers
             Tiles[18, 18].IsFree = false;
         }
 
-         private void Update()
+        private void Update()
         {
             if (selectingForHand != null && Input.GetMouseButton(1))
             {
@@ -77,7 +77,7 @@ namespace OneRoomFactory.Managers
                     if (hit.collider.CompareTag("Tile"))
                     {
                         var tile = hit.collider.gameObject.GetComponent<Tile>();
-                        
+
                         if ((tile.IsFree || tile.BuiltObject.GetComponent<Belt>() != null) && Vector3.Distance(tile.transform.position, selectingForHand.transform.position) <= 2)
                         {
                             Debug.Log("over free tile");
@@ -100,6 +100,7 @@ namespace OneRoomFactory.Managers
             {
                 for (var j = 0; j < Size; j++)
                 {
+                    Tiles[i, j].gameObject.SetActive(true);
                     Tiles[i, j].ResetMaterial();
                 }
             }
@@ -113,6 +114,25 @@ namespace OneRoomFactory.Managers
         public void SelectTargetTileForHand(Hand hand)
         {
             selectingForHand = hand;
+            // disable tiles the hand cant reach
+            for (var i = 0; i < Size; i++)
+            {
+                for (var j = 0; j < Size; j++)
+                {
+                    if (i > hand.Tile.PosX + 2
+                        || i < hand.Tile.PosX - 2 
+                        || j > hand.Tile.PosY + 2
+                        || j < hand.Tile.PosY - 2
+                        || (i == hand.Tile.PosX + 2 && j != hand.Tile.PosY)
+                        || (i == hand.Tile.PosX - 2 && j != hand.Tile.PosY)
+                        || (j == hand.Tile.PosY + 2 && i != hand.Tile.PosX)
+                        || (j == hand.Tile.PosY - 2 && i != hand.Tile.PosX)
+                        )
+                    {
+                        Tiles[i, j].gameObject.SetActive(false);
+                    }
+                }
+            }
         }
     }
 }
