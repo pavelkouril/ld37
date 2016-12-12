@@ -76,7 +76,8 @@ namespace OneRoomFactory.Managers
                     if (hit.collider.CompareTag("Tile"))
                     {
                         var tile = hit.collider.gameObject.GetComponent<Tile>();
-                        if (tile.IsFree && Vector3.Distance(tile.transform.position, selectingForHand.transform.position) <= 2)
+                        
+                        if ((tile.IsFree || tile.BuiltObject.GetComponent<Belt>() != null) && Vector3.Distance(tile.transform.position, selectingForHand.transform.position) <= 2)
                         {
                             Debug.Log("over free tile");
                             if (Input.GetMouseButton(0))

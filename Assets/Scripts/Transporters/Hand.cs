@@ -89,9 +89,8 @@ namespace OneRoomFactory.Transporters
                 foreach (var collider in Physics.OverlapSphere(transform.position, 2.2f, MovableLayer))
                 {
                     var movable = collider.GetComponent<Movable>();
-                    if (lastMoved == null || movable != lastMoved)
+                    if ((lastMoved == null || movable != lastMoved) && movable.Type == AcceptedType)
                     {
-                        Debug.Log("Attached");
                         ToMove = movable;
                         lastMoved = movable;
                         break;
