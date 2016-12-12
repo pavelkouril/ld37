@@ -55,7 +55,7 @@ namespace OneRoomFactory.Managers
             yield return new WaitForSeconds(6);
             uiManager.DisplayText("Each Station need intermediate product from previous Station (and sometimes other supplies). Stations are numbered from 01 to 05.", 5);
             yield return new WaitForSeconds(6);
-            uiManager.DisplayText("Press <b>B</b> or click on the <b>Build</b> icon to open <b>Build menu</b> and play!.", 5);
+            uiManager.DisplayText("Press <b>B</b> or click on the <b>Build</b> icon to open <b>Build menu</b> and play!", 5);
             yield return new WaitForSeconds(6);
             uiManager.EnablePlaying();
         }
@@ -66,6 +66,10 @@ namespace OneRoomFactory.Managers
             {
                 RemaningTimeInSeconds--;
                 uiManager.UpdateTimer(TimeSpan.FromSeconds(RemaningTimeInSeconds));
+                if (RemaningTimeInSeconds == 10)
+                {
+                    uiManager.DisplayText("Your game time is almost over - do you feel like you can make more money next time? Try it!", 10);
+                }
                 if (RemaningTimeInSeconds == 0)
                 {
                     hsManager.WriteHighScore(moneyManager.Balance);
