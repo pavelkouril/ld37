@@ -16,6 +16,7 @@ namespace OneRoomFactory.Managers
         public GameObject BuildMenu;
         public GameObject HandMenu;
         public GameObject PlayGUI;
+        public GameObject SkipTutorialButton;
         public Text TimerText;
         public Text MoneyBalanceText;
         public GameObject TextBackground;
@@ -112,6 +113,8 @@ namespace OneRoomFactory.Managers
         public void EnablePlaying()
         {
             PlayGUI.SetActive(true);
+            SkipTutorialButton.SetActive(false);
+            TextBackground.SetActive(false);
             enableInputs = true;
         }
 

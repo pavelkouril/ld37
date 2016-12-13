@@ -31,32 +31,41 @@ namespace OneRoomFactory.Managers
         {
             RemaningTimeInSeconds = GameLengthInSeconds;
             uiManager.UpdateTimer(TimeSpan.FromSeconds(RemaningTimeInSeconds));
-            StartCoroutine(UpdateTime());
-            if (ShowTutorial)
-            {
-                StartCoroutine(ShowBasicInfo());
-            }
-            else
-            {
-                uiManager.EnablePlaying();
-            }
+            StartCoroutine(ShowBasicInfo());
         }
 
         private IEnumerator ShowBasicInfo()
         {
-            yield return new WaitForSeconds(2);
-            uiManager.DisplayText("Hello! Welcome! How are you? You have recently acquired this empty factory.", 4);
-            yield return new WaitForSeconds(6);
-            uiManager.DisplayText("The market is booming for custom PCBs, so you want to make them too!", 4);
-            yield return new WaitForSeconds(6);
-            uiManager.DisplayText("You will need to transform supplies by <b>Belts</b> and <b>Hands</b> to Stations.", 5);
-            yield return new WaitForSeconds(6);
-            uiManager.DisplayText("First you need to transfer <b>Cuprexit</b> to <b>UV Station</b>.", 5);
-            yield return new WaitForSeconds(6);
-            uiManager.DisplayText("Each Station need intermediate product from previous Station (and sometimes other supplies). Stations are numbered from 01 to 05.", 5);
-            yield return new WaitForSeconds(6);
-            uiManager.DisplayText("Press <b>B</b> or click on the <b>Build</b> icon to open <b>Build menu</b> and play!", 5);
-            yield return new WaitForSeconds(6);
+            if (ShowTutorial)
+            {
+                uiManager.DisplayText("Hello! Welcome! How are you? You have recently acquired this empty factory.", 4);
+                yield return new WaitForSeconds(6);
+            }
+            if (ShowTutorial)
+            {
+                uiManager.DisplayText("The market is booming for custom PCBs, so you want to make them too!", 4);
+                yield return new WaitForSeconds(6);
+            }
+            if (ShowTutorial)
+            {
+                uiManager.DisplayText("You will need to transform supplies by <b>Belts</b> and <b>Hands</b> to Stations.", 5);
+                yield return new WaitForSeconds(6);
+            }
+            if (ShowTutorial)
+            {
+                uiManager.DisplayText("First you need to transfer <b>Cuprexit</b> to <b>UV Station</b>.", 5);
+                yield return new WaitForSeconds(6);
+            }
+            if (ShowTutorial)
+            {
+                uiManager.DisplayText("Each Station need intermediate product from previous Station (and sometimes other supplies). Stations are numbered from 01 to 05.", 5);
+                yield return new WaitForSeconds(6);
+            }
+            if (ShowTutorial)
+            {
+                uiManager.DisplayText("Press <b>B</b> or click on the <b>Build</b> icon to open <b>Build menu</b> and play!", 5);
+                yield return new WaitForSeconds(6);
+            }
             uiManager.EnablePlaying();
         }
 
@@ -117,6 +126,12 @@ namespace OneRoomFactory.Managers
                 hasHand = true;
                 uiManager.DisplayText("You need to configure your Hand. Click on it to select <b>Target tile</b> and what <b>supply type it moves</b>!", 6);
             }
+        }
+
+        public void SkipTutorial()
+        {
+            StartCoroutine(UpdateTime());
+            uiManager.EnablePlaying();
         }
     }
 }
