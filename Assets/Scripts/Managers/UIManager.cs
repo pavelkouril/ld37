@@ -63,6 +63,7 @@ namespace OneRoomFactory.Managers
                     BuildMenu.SetActive(false);
                     PauseMenu.SetActive(false);
                     PlayGUI.SetActive(true);
+                    Time.timeScale = 1;
                 }
 
                 if (Input.GetKeyDown(KeyCode.Escape))
@@ -121,6 +122,7 @@ namespace OneRoomFactory.Managers
 
         public void RestartGame()
         {
+            Time.timeScale = 1;
             SceneManager.LoadScene(1);
         }
 
