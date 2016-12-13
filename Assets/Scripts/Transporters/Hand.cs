@@ -207,7 +207,7 @@ namespace OneRoomFactory.Transporters
             return distance;
         }
 
-        private void OnMouseDown()
+        private void OnMouseUp()
         {
             if (!Tile.TileManager.UIManager.HasMenuOpen)
             {

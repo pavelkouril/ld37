@@ -130,6 +130,7 @@ namespace OneRoomFactory.Managers
 
         public void SkipTutorial()
         {
+            ShowTutorial = false;
             StartCoroutine(UpdateTime());
             uiManager.EnablePlaying();
         }
