@@ -55,7 +55,14 @@ namespace OneRoomFactory.Managers
             {
                 if (Input.GetKeyDown(KeyCode.B) && !gamePaused)
                 {
-                    ShowBuildMenu();
+                    if (!BuildMenu.activeSelf)
+                    {
+                        ShowBuildMenu();
+                    }
+                    else
+                    {
+                        HideBuildMenu();
+                    }
                 }
 
                 if (Input.GetMouseButton(1) && HasMenuOpen)

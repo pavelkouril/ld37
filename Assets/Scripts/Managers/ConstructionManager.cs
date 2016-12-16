@@ -227,7 +227,14 @@ namespace OneRoomFactory.Managers
         {
             if (modelToPlace == null && Input.GetKeyDown(KeyCode.F))
             {
-                EnterDestroyMode();
+                if (!isDestroying)
+                {
+                    EnterDestroyMode();
+                }
+                else if (modelToPlace == null && isDestroying)
+                {
+                    HideBuildingMode();
+                }
             }
 
             if ((modelToPlace != null || isDestroying) && Input.GetMouseButton(1))
