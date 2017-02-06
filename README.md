@@ -6,7 +6,7 @@ This was our (@pavelkouril and @Zgragselus) entry for LD37.
 
 The code is licensed under MIT license. However, our own assets are distributed under CC BY-SA 4.0.
 
-The asset we did not create (audio track for ambient sound) is distributed under its original license.
+The asset we did not create (audio track for ambient sound) is distributed under its original license (CC-0, Public Domain).
 
 ### MIT
 
